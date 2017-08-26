@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/BCAPP.iml" filepath="$PROJECT_DIR$/BCAPP.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BinalbaganCommercial-Android.iml" filepath="$PROJECT_DIR$/BinalbaganCommercial-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

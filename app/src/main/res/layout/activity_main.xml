@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.chris.bcapp.MainActivity">
+    tools:context="com.example.chris.bcconsole.MainActivity">
 
     <FrameLayout
         android:id="@+id/content"
@@ -21,7 +21,8 @@
             android:layout_marginBottom="@dimen/activity_vertical_margin"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin" />
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/title_home" />
 
     </FrameLayout>
 
