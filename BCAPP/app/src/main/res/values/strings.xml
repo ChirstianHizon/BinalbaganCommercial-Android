@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BC APP</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- FOR NAVIGATION -->
+    <string name="navi_dashboard">Dashboard</string>
+    <string name="navi_inventory">Inventory</string>
+    <string name="navi_reports">Reports</string>
+    <string name="navi_delivery">Delivery</string>
+</resources>
