@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">BC Console</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+
+    <string name="navi_dashboard">Dashboard</string>
+    <string name="navi_inventory">Inventory</string>
+    <string name="navi_reports">Reports</string>
 </resources>
