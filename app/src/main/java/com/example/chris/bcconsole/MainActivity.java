@@ -5,11 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -18,13 +15,21 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.navi_dashboard);
+                    setTitle("Dashboard");
+                    fragment_Dashboard dashboard = new fragment_Dashboard();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, dashboard).commit();
                     return true;
                 case R.id.navigation_inventory:
-                    mTextMessage.setText(R.string.navi_inventory);
+                    //TODO: ADD INVENTORY
+                    setTitle("Inventory");
+                    fragment_Inventory inventory = new fragment_Inventory();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, inventory).commit();
                     return true;
                 case R.id.navigation_reports:
-                    mTextMessage.setText(R.string.navi_reports);
+                    //TODO: ADD REPORTS
+                    setTitle("Reports");
+                    fragment_Reports reports = new fragment_Reports();
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, reports).commit();
                     return true;
             }
             return false;
@@ -37,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
