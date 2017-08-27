@@ -11,7 +11,7 @@ public class fragment_Reports extends android.support.v4.app.Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragment_view = inflater.inflate(R.layout.fragment_reports, container, false);
-        return fragment_view;
+        View view = inflater.inflate(R.layout.fragment_reports, container, false);
+        return view;
     }
 }
