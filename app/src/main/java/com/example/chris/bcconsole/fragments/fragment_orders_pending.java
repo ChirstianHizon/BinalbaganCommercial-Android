@@ -1,4 +1,4 @@
-package com.example.chris.bcconsole;
+package com.example.chris.bcconsole.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.example.chris.bcconsole.R;
 
 public class fragment_orders_pending extends android.support.v4.app.Fragment {
 
