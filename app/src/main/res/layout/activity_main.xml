@@ -16,7 +16,7 @@
 
         <fragment
             android:id="@+id/fragment"
-            android:name="com.example.chris.bcconsole.fragment_Dashboard"
+            android:name="com.example.chris.bcconsole.fragments.fragment_Dashboard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_dashboard" />

@@ -6,6 +6,10 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.example.chris.bcconsole.fragments.fragment_Dashboard;
+import com.example.chris.bcconsole.fragments.fragment_Inventory;
+import com.example.chris.bcconsole.fragments.fragment_Reports;
+
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
