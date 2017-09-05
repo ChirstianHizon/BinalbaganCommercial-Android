@@ -10,6 +10,8 @@ import com.example.chris.bcconsole.R;
 
 public class fragment_Dashboard extends android.support.v4.app.Fragment {
 
+
+    //    TODO : ADD TABLES
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

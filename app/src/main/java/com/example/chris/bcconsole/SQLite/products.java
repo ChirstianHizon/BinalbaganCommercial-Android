@@ -11,7 +11,7 @@ public class products {
 
 //    ------  DESCRIPTION ------
 
-    private String name, desc, datemodified, timemodified, image;
+    private String name, desc, datestamp, timestamp, image;
     private int category;
 
 //    ------  LEVELS  -----------
@@ -19,6 +19,42 @@ public class products {
     private int status, level, optimal, warning;
 
 //    ------  GET AND  SET --------
+public products() {
+
+}
+
+    public products(int _id, String _name, String _desc, String _datestamp, String _timestamp,
+                    int _level, int _optimal, int _warning,
+                    String _image, int _category, int _status) {
+
+        this.id = _id;
+        this.name = _name;
+        this.desc = _desc;
+        this.datestamp = _datestamp;
+        this.timestamp = _timestamp;
+        this.image = _image;
+        this.level = _level;
+        this.optimal = _optimal;
+        this.warning = _warning;
+        this.category = _category;
+        this.status = _status;
+    }
+
+    public products(String _name, String _desc, String _datestamp, String _timestamp,
+                    int _level, int _optimal, int _warning,
+                    String _image, int _category, int _status) {
+
+        this.name = _name;
+        this.desc = _desc;
+        this.datestamp = _datestamp;
+        this.timestamp = _timestamp;
+        this.image = _image;
+        this.level = _level;
+        this.optimal = _optimal;
+        this.warning = _warning;
+        this.category = _category;
+        this.status = _status;
+    }
 
     public int getId() {
         return id;
@@ -44,20 +80,20 @@ public class products {
         this.desc = desc;
     }
 
-    public String getDatemodified() {
-        return datemodified;
+    public String getDatestamp() {
+        return datestamp;
     }
 
-    public void setDatemodified(String datemodified) {
-        this.datemodified = datemodified;
+    public void setDatestamp(String datestamp) {
+        this.datestamp = datestamp;
     }
 
-    public String getTimemodified() {
-        return timemodified;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setTimemodified(String timemodified) {
-        this.timemodified = timemodified;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public String getImage() {

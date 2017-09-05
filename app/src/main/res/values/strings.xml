@@ -5,4 +5,8 @@
     <string name="navi_inventory">Inventory</string>
     <string name="navi_reports">Reports</string>
     <string name="pendingorders">Pending Orders</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
