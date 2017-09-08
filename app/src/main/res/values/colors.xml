@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
+
+    <color name="buttonColor">#3f51b5</color>
+    <color name="iconColor">#ffffff</color>
+
 </resources>

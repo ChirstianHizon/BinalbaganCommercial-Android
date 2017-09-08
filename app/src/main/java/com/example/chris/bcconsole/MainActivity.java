@@ -1,21 +1,26 @@
 package com.example.chris.bcconsole;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
-import com.example.chris.bcconsole.SQLite.DBController;
 import com.example.chris.bcconsole.fragments.fragment_Dashboard;
 import com.example.chris.bcconsole.fragments.fragment_Inventory;
 import com.example.chris.bcconsole.fragments.fragment_Reports;
 
 public class MainActivity extends AppCompatActivity {
 
-    public final static String url = "http://10.0.2.2/BinalbaganCommercial-Thesis/php/";
-
+    public final static String url = "http://10.0.2.2/BinalbaganCommercial-Thesis/php/mobile.php";
+    //    public final static String url = "http://192.168.1.129/BinalbaganCommercial-Thesis/php/mobile.php";
+//    public final static String url = "http://192.168.1.36/BinalbaganCommercial-Thesis/php/mobile.php";
+    private static final String TAG = "Main Activity";
+    private Toolbar tb;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -49,14 +54,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        tb = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(tb);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
 
-        DBController db = new DBController(this);
-        Log.d("Insert: ", "Inserting ..");
+//        DBController db = new DBController(this);
+//        Log.d("Insert: ", "Inserting ..");
 
+        SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
+        String uid = prefs.getString("uid", "true");
+        Log.i(TAG, "UID:" + uid);
+
+        if (Boolean.valueOf(uid)) {
+            Intent intent = new Intent(MainActivity.this, LoginActiviy.class);
+            startActivity(intent);
+        }
     }
 
 }

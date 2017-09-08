@@ -47,11 +47,12 @@
 
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Total Stock"
+                        android:text="Total Products"
                         android:textColor="@android:color/background_light" />
 
                     <TextView
 
+                        android:id="@+id/tv_total_products"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -80,6 +81,7 @@
                         android:textColor="@android:color/background_light" />
 
                     <TextView
+                        android:id="@+id/tv_total_sales"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
@@ -116,8 +118,9 @@
                         android:textColor="@android:color/background_light" />
 
                     <TextView
+                        android:id="@+id/tv_total_delivery"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:gravity="end"
                         android:text="0 delivery"
@@ -143,6 +146,7 @@
                         android:textColor="@android:color/background_light" />
 
                     <TextView
+                        android:id="@+id/tv_pending_orders"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"

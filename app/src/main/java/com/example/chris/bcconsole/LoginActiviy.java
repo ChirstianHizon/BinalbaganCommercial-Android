@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -24,7 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginActiviy extends AppCompatActivity {
-    private String url = MainActivity.url + "login.php";
+    private static final String TAG = "Login Activity";
     private Button btnlogin;
     private TextView tvusername;
     private TextView tvpassword;
@@ -48,24 +49,32 @@ public class LoginActiviy extends AppCompatActivity {
             }
         });
 
+        SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
+        Boolean status = Boolean.valueOf(prefs.getString("uid", "true"));
+        Log.d(TAG, prefs.getString("uid", "ERROR"));
+
+        if (!status) {
+            Intent intent = new Intent(LoginActiviy.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
+
     }
 
     private void checkUser() {
-
-
         final SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject reader = new JSONObject(response);
                             Boolean status = Boolean.valueOf(reader.getString("status"));
-//                            Toast.makeText(LoginActiviy.this, "Status:" + status, Toast.LENGTH_SHORT).show();
-//                            tvstatus.setText(response);
                             if (status) {
-                                editor.putString("uname", reader.getString("uid"));
+                                editor.putString("uid", reader.getString("uid"));
+                                editor.putString("uname", reader.getString("uname"));
                                 editor.putString("fname", reader.getString("fname"));
                                 editor.putString("lname", reader.getString("lname"));
                                 editor.putString("image", reader.getString("image"));
@@ -79,7 +88,6 @@ public class LoginActiviy extends AppCompatActivity {
 
                             } else {
                                 tvstatus.setText("Invalid Username/Password");
-//                                tvstatus.setText(response);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

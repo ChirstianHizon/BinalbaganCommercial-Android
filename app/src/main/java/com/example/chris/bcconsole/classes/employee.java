@@ -1,4 +1,4 @@
-package com.example.chris.bcconsole.SQLite;
+package com.example.chris.bcconsole.classes;
 
 /**
  * Created by chris on 28/08/2017.

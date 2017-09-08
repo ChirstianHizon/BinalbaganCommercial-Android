@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.chris.bcconsole.classes.Products;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +70,7 @@ public class DBController extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addProduct(products prod) {
+    public void addProduct(Products prod) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -88,8 +90,8 @@ public class DBController extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<products> getAllProducts() {
-        List<products> productList = new ArrayList<products>();
+    public List<Products> getAllProducts() {
+        List<Products> productList = new ArrayList<Products>();
         // Select All Query
 
         String selectQuery = "SELECT  * FROM " + TABLE_PRODUCTS;
@@ -100,7 +102,7 @@ public class DBController extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                products prod = new products();
+                Products prod = new Products();
                 prod.setId(Integer.parseInt(cursor.getString(0)));
                 prod.setName(cursor.getString(1));
                 prod.setDesc(cursor.getString(2));
@@ -110,8 +112,8 @@ public class DBController extends SQLiteOpenHelper {
                 prod.setWarning(Integer.parseInt(cursor.getString(6)));
                 prod.setOptimal(Integer.parseInt(cursor.getString(7)));
                 prod.setImage(cursor.getString(8));
-                prod.setCategory(Integer.parseInt(cursor.getString(9)));
-                prod.setStatus(Integer.parseInt(cursor.getString(10)));
+                prod.setCategory(cursor.getString(9));
+                prod.setStatus(cursor.getString(10));
 
                 // Adding contact to list
                 productList.add(prod);
