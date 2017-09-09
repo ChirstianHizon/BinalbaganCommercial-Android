@@ -15,6 +15,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.adapters.TabsPageAdapter;
 import com.example.chris.bcconsole.classes.Products;
+import com.example.chris.bcconsole.fragments.fragment_Inventory_barcode;
 import com.example.chris.bcconsole.fragments.fragment_Inventory_description;
 import com.example.chris.bcconsole.fragments.fragment_Inventory_levels;
 
@@ -24,12 +25,12 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Inventory_View extends AppCompatActivity {
+public class InventoryView extends AppCompatActivity {
 
     private TabsPageAdapter mTabsPageAdapter;
     private ViewPager mViewPager;
     private String product_ID;
-    private String TAG = "Inventory_View";
+    private String TAG = "InventoryView";
     private Products prod;
     private String test = "test";
 
@@ -56,6 +57,7 @@ public class Inventory_View extends AppCompatActivity {
         TabsPageAdapter adapter = new TabsPageAdapter(getSupportFragmentManager());
         adapter.addFragment(new fragment_Inventory_description(), "Details");
         adapter.addFragment(new fragment_Inventory_levels(), "Levels");
+        adapter.addFragment(new fragment_Inventory_barcode(), "Barcode");
         viewPager.setAdapter(adapter);
     }
 
@@ -104,34 +106,6 @@ public class Inventory_View extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }
-
-    public String getProductDetails(String type) {
-        switch (type) {
-            case "name":
-                return prod.getName();
-            case "desc":
-                return prod.getDesc();
-            case "cat":
-                return prod.getCategory();
-            case "price":
-                return prod.getPrice();
-            case "level":
-                return String.valueOf(prod.getLevel());
-            case "optimal":
-                return String.valueOf(prod.getOptimal());
-            case "warning":
-                return String.valueOf(prod.getWarning());
-            case "image":
-                return prod.getImage();
-            case "status":
-                return prod.getStatus();
-            case "datestamp":
-                return prod.getDatestamp();
-            case "timestamp":
-                return prod.getTimestamp();
-        }
-        return "ERROR";
     }
 
     public Products getProduct() {

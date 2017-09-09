@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.chris.bcconsole.Inventory_View;
+import com.example.chris.bcconsole.InventoryView;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.classes.Products;
 
@@ -55,7 +55,7 @@ public class InventoryListAdapter extends ArrayAdapter<Products> {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getContext(), Inventory_View.class);
+                Intent intent = new Intent(getContext(), InventoryView.class);
                 intent.putExtra("ID", String.valueOf(products.getId()));
                 context.startActivity(intent);
             }

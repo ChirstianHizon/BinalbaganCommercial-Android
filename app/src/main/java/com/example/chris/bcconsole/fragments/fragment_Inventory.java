@@ -1,5 +1,6 @@
 package com.example.chris.bcconsole.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,8 +43,10 @@ import static com.android.volley.VolleyLog.TAG;
 public class fragment_Inventory extends android.support.v4.app.Fragment {
 
     public static Boolean viewDeleted = false;
-    private TextView text, status;
-    private String last_product_id = "999999999999999";
+    private final String max = "999999999999999";
+    Boolean load = false;
+    private TextView text, status, header, temp_last;
+    private String last_product_id = max;
     private Button btn_loadmore;
     private int paginate_limit = 8;
     private ScrollView sv_main;
@@ -55,31 +59,40 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
     private boolean flag_loading;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConstraintLayout loading;
-
+    private SearchView search;
+    private MainActivity activity;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_inventory, container, false);
 
+
         pb_center = (ProgressBar) view.findViewById(R.id.pb_center);
         lv_main = (ListView) view.findViewById(R.id.lv_main);
         loading = (ConstraintLayout) view.findViewById(R.id.loading);
         status = (TextView) view.findViewById(R.id.status);
 
+        activity = (MainActivity) getActivity();
+        header = activity.getHeader();
+        search = activity.getSearch();
         product_list = new ArrayList<Products>();
+
+        Search();
 
         adapter = new InventoryListAdapter(getContext(), R.layout.list_inventory, product_list);
         lv_main.setAdapter(adapter);
 
-        checkItems(last_product_id, paginate_limit);
+        checkItems(last_product_id, paginate_limit, "");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeToRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 adapter.clear();
-                checkItems("999999999", paginate_limit);
+                status.setText("Loading.....");
+                loading.setVisibility(View.VISIBLE);
+                checkItems(max, paginate_limit, "");
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -87,6 +100,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
         lv_main.setOnScrollListener(new AbsListView.OnScrollListener() {
 
             public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                search.setIconified(true);
             }
 
             public void onScroll(AbsListView view, int firstVisibleItem,
@@ -100,7 +114,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             public void run() {
-                                checkItems(last_product_id, paginate_limit);
+                                checkItems(last_product_id, paginate_limit, "");
                             }
                         }, 2000);
                     }
@@ -112,7 +126,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
         return view;
     }
 
-    private void checkItems(final String last_id, final int page_limit) {
+    private void checkItems(final String last_id, final int page_limit, final String query) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
                 new Response.Listener<String>() {
                     @Override
@@ -121,12 +135,13 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                             JSONObject json = new JSONObject(response);
                             String json_counter = json.getString("COUNTER");
                             JSONObject product_counter = new JSONObject(json_counter);
-
-
                             int counter = Integer.valueOf(product_counter.getString("COUNTER"));
+//                            TODO: FIX BUG WHEN COUNTER == PAGELIMIT WHEN NO MORE PRODUCTS LEFT
+                            load = counter < page_limit;
                             if (counter == 0) {
                                 Toast.makeText(getContext(), "Reached Last Data", Toast.LENGTH_SHORT).show();
                                 last_product_id = "0";
+
                             } else {
                                 for (int x = 1; x <= counter; x++) {
                                     String json_result = json.getString(String.valueOf(x));
@@ -158,7 +173,8 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                                     }
 
                                 }
-                                flag_loading = false;
+                                Log.d("LOAD", String.valueOf(load));
+                                flag_loading = load;
                             }
 
                         } catch (JSONException e) {
@@ -182,6 +198,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                 params.put("id", last_id);
                 params.put("paginate", String.valueOf(page_limit));
                 params.put("type", "2");
+                params.put("query", query);
                 return params;
             }
         };
@@ -189,5 +206,45 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
         requestQueue.add(stringRequest);
 
         pb_center.setVisibility(View.GONE);
+    }
+
+    private void Search() {
+        search.setIconified(true);
+
+        search.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                header.setVisibility(View.GONE);
+                search.setBackgroundColor(Color.WHITE);
+            }
+        });
+
+        search.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                if (!search.isIconified()) {
+                    header.setVisibility(View.VISIBLE);
+                }
+                search.setBackgroundColor(Color.TRANSPARENT);
+                return false;
+            }
+        });
+        search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                status.setText("Loading.....");
+                loading.setVisibility(View.VISIBLE);
+                adapter.clear();
+                last_product_id = max;
+                checkItems(last_product_id, paginate_limit, query);
+                search.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
     }
 }
