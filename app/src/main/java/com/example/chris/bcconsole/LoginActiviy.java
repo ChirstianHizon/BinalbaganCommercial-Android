@@ -1,5 +1,6 @@
 package com.example.chris.bcconsole;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,6 +45,7 @@ public class LoginActiviy extends AppCompatActivity {
         btnlogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnlogin.setEnabled(false);
                 tvstatus.setText("");
                 checkUser();
             }
@@ -64,7 +66,9 @@ public class LoginActiviy extends AppCompatActivity {
 
     private void checkUser() {
         final SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
-
+        final ProgressDialog progDailog = ProgressDialog.show(this,
+                "Connecting to Server",
+                "Verifying Account....", true);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
                 new Response.Listener<String>() {
                     @Override
@@ -92,12 +96,15 @@ public class LoginActiviy extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
+                        progDailog.dismiss();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 tvstatus.setText("Server Error");
+                progDailog.dismiss();
+                btnlogin.setEnabled(true);
+                Toast.makeText(context, "Unaable to Connect to Server", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() {
@@ -111,6 +118,5 @@ public class LoginActiviy extends AppCompatActivity {
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-
     }
 }

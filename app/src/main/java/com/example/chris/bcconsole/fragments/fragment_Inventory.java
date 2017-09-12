@@ -1,6 +1,5 @@
 package com.example.chris.bcconsole.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -76,14 +75,15 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
         activity = (MainActivity) getActivity();
         header = activity.getHeader();
         search = activity.getSearch();
-        product_list = new ArrayList<Products>();
 
+
+        product_list = new ArrayList<Products>();
         Search();
 
         adapter = new InventoryListAdapter(getContext(), R.layout.list_inventory, product_list);
         lv_main.setAdapter(adapter);
 
-        checkItems(last_product_id, paginate_limit, "");
+        generateProductList(last_product_id, paginate_limit, "");
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeToRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -92,7 +92,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                 adapter.clear();
                 status.setText("Loading.....");
                 loading.setVisibility(View.VISIBLE);
-                checkItems(max, paginate_limit, "");
+                generateProductList(max, paginate_limit, "");
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         });
@@ -114,7 +114,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             public void run() {
-                                checkItems(last_product_id, paginate_limit, "");
+                                generateProductList(last_product_id, paginate_limit, "");
                             }
                         }, 2000);
                     }
@@ -126,7 +126,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
         return view;
     }
 
-    private void checkItems(final String last_id, final int page_limit, final String query) {
+    private void generateProductList(final String last_id, final int page_limit, final String query) {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
                 new Response.Listener<String>() {
                     @Override
@@ -215,7 +215,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
                 header.setVisibility(View.GONE);
-                search.setBackgroundColor(Color.WHITE);
+//                search.setBackgroundColor(Color.WHITE);
             }
         });
 
@@ -225,7 +225,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                 if (!search.isIconified()) {
                     header.setVisibility(View.VISIBLE);
                 }
-                search.setBackgroundColor(Color.TRANSPARENT);
+//                search.setBackgroundColor(Color.TRANSPARENT);
                 return false;
             }
         });
@@ -236,7 +236,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                 loading.setVisibility(View.VISIBLE);
                 adapter.clear();
                 last_product_id = max;
-                checkItems(last_product_id, paginate_limit, query);
+                generateProductList(last_product_id, paginate_limit, query);
                 search.clearFocus();
                 return false;
             }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_inventory"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Inventory" />
+        <item
+            android:id="@+id/nav_delivery"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Delivery" />
+        <item
+            android:id="@+id/nav_reports"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Reports" />
+        <item
+            android:id="@+id/nav_employee"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Employee" />
+    </group>
+
+    <item android:title="Reports">
+        <menu>
+            <item
+                android:id="@+id/nav_employee"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Employee" />
+            <item
+                android:id="@+id/nav_sales"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Sales" />
+            <item
+                android:id="@+id/nav_inventory"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Inventory" />
+        </menu>
+    </item>
+
+</menu>
