@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Created by chris on 28/08/2017.
@@ -13,8 +12,8 @@ import android.util.Log;
 
 public class DBController extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "db)binalbagan";
+    private static final int DATABASE_VERSION = 3;
+    private static final String DATABASE_NAME = "db_binalbagan_console";
 
     private static final String TABLE_PRODUCTS = "TABLE_PRODUCTS";
 
@@ -38,7 +37,6 @@ public class DBController extends SQLiteOpenHelper {
     private static final String route_lng = "route_lng";
     private static final String route_datetimestamp = "route_timestamp";
     private static final String del_id = "del_id";
-
 
 
     public DBController(Context context) {
@@ -69,9 +67,7 @@ public class DBController extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i("SQLite: ", CREATE_PRODUCTS_TABLE);
 
-//
         db.execSQL(CREATE_ROUTES_TABLE);
     }
 

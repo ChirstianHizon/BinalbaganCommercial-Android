@@ -20,7 +20,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.Delivery.DeliveryOnProgress;
-import com.example.chris.bcconsole.Service.LocatorService;
 import com.example.chris.bcconsole.adapters.DeliveryListAdapter;
 import com.example.chris.bcconsole.classes.Delivery;
 
@@ -63,19 +62,17 @@ public class DeliveryMainActivity extends AppCompatActivity {
         }
 
         SharedPreferences devprefs = getSharedPreferences("DELIVERY", MODE_PRIVATE);
-        String devid = devprefs.getString("id", "false");
+        String order_id = devprefs.getString("id", "false");
 
-        Log.d("DELIVERY-PREF",devid);
-        if(!Boolean.valueOf(devid).equals("false")){
-            resumeDelivery(devid);
+        Log.d("DELIVERY-PREFS",order_id);
+        if(!order_id.equals("false")){
+
+            resumeDelivery(order_id);
         }else{
-
             String prefurl = prefs.getString("url", AdminMainActivity.defaulturl);
             AdminMainActivity.setNewUrl(prefurl);
             Log.d("URL:",url);
-            Log.i("USER_ID: ", "UID:" + uid);
-
-
+            Log.d("USER_ID: ", "UID:" + uid);
 
 
             delivery_list = new ArrayList<Delivery>();
@@ -149,7 +146,7 @@ public class DeliveryMainActivity extends AppCompatActivity {
                                 String name = order.getString("LNAME") +", "+order.getString("FNAME");
 
                                 if(order.getString("STATUS").equals("200")){
-                                    resumeDelivery(order.getString("ID"));
+                                    //resumeDelivery(order.getString("ID"));
                                 }else{
                                 delivery_list.add(
                                         new Delivery(
@@ -182,8 +179,6 @@ public class DeliveryMainActivity extends AppCompatActivity {
 
     private void resumeDelivery(String id){
 
-        runService();
-
         SharedPreferences.Editor editor = getSharedPreferences("DELIVERY", MODE_PRIVATE).edit();
         editor.putString("id", id);
         editor.apply();
@@ -195,13 +190,4 @@ public class DeliveryMainActivity extends AppCompatActivity {
         finish();
 
     }
-
-    private void runService(){
-        Intent intent = new Intent(context, LocatorService.class);
-//        intent.putExtra("STATUS", true);
-//        put EXTRA STATUS true to end Locator
-        startService(intent);
-
-    }
-
 }

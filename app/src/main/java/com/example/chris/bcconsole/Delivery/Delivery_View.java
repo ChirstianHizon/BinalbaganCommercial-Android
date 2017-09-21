@@ -2,7 +2,7 @@ package com.example.chris.bcconsole.Delivery;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,8 +19,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.chris.bcconsole.AdminMainActivity;
-import com.example.chris.bcconsole.Service.LocatorService;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.SQLite.DBController;
 
@@ -28,6 +27,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.example.chris.bcconsole.AdminMainActivity.url;
 
 public class Delivery_View extends AppCompatActivity {
 
@@ -69,7 +70,8 @@ public class Delivery_View extends AppCompatActivity {
         btndelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            runService();
+                Toast.makeText(context, "Delivery Started", Toast.LENGTH_SHORT).show();
+                resumeDelivery(order_id);
             }
         });
     }
@@ -87,7 +89,7 @@ public class Delivery_View extends AppCompatActivity {
 
     private void initializeProductDetails(final String id) {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, AdminMainActivity.url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -107,9 +109,11 @@ public class Delivery_View extends AppCompatActivity {
                                     break;
                                 case "0":
                                     tvstatus.setText("ORDER NOT APPROVED");
+                                    btndelivery.setVisibility(View.GONE);
                                     break;
                                 case "100":
                                     tvstatus.setText("ORDER COMPLETE");
+                                    btndelivery.setVisibility(View.GONE);
                                     break;
                                 case "200":
                                     tvstatus.setText("DELIVERY ON PROGRESS");
@@ -139,35 +143,55 @@ public class Delivery_View extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    private void DBFunctions(){
-        Boolean test = myDb.insertRoute("test","test","");
-        Log.d("DB-INSERT", String.valueOf(test));
+    private void resumeDelivery(String id){
 
-        Cursor route = myDb.getAllRoute();
-        while(route.moveToNext()) {
-            String id = route.getString(0);
-            String lat = route.getString(1);
-            String lng = route.getString(2);
-            String datetime = route.getString(3);
-            Log.d("DB-VIEW", id + ","+lat + ","+lng + ","+datetime);
-        }
+        createDelivery(id);
 
-        Integer del = myDb.deleteAllRouteData();
-        Log.d("DB-DELETE", String.valueOf(del));
-
-        route = myDb.getAllRoute();
-        while(route.moveToNext()) {
-            String id = route.getString(0);
-            String lat = route.getString(1);
-            String lng = route.getString(2);
-            String datetime = route.getString(3);
-            Log.d("DB-VIEW", id + ","+lat + ","+lng + ","+datetime);
-        }
     }
 
-    private void runService(){
-        Intent intent = new Intent(context, LocatorService.class);
-        startService(intent);
+    private void createDelivery(final String orderid) {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("DELIVERY-RESULT",response);
 
+                        try {
+                            JSONObject reader = new JSONObject(response);
+
+                            SharedPreferences.Editor editor = getSharedPreferences("DELIVERY", MODE_PRIVATE).edit();
+                            editor.putString("id", reader.getString("ID"));
+                            editor.apply();
+
+                            Toast.makeText(context, "Resuming Delivery", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(context, DeliveryOnProgress.class);
+                            intent.putExtra("ID", reader.getString("ID"));
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("access", "Binalbagan_Commercial_MOBILE_Access");
+                params.put("type", "8");
+                params.put("orderid", orderid);
+                Log.d("COORD-POST", String.valueOf(params));
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }
