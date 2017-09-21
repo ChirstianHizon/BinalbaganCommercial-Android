@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.chris.bcconsole.InventoryView;
+import com.example.chris.bcconsole.Admin.InventoryView;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.classes.Products;
 

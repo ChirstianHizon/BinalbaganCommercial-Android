@@ -11,21 +11,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActiviy"></activity>
-        <activity
-            android:name=".InventoryView"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
+        <activity android:name=".LoginActiviy">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <activity
+            android:name=".Admin.InventoryView"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".AdminMainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".DeliveryMainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Delivery.Delivery_View"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".Delivery.DeliveryOnProgress"></activity>
     </application>
 
 </manifest>

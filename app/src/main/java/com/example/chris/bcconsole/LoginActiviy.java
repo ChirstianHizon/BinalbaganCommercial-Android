@@ -1,7 +1,7 @@
 package com.example.chris.bcconsole;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,13 +25,15 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.chris.bcconsole.AdminMainActivity.url;
+
 public class LoginActiviy extends AppCompatActivity {
     private static final String TAG = "Login Activity";
     private Button btnlogin;
     private TextView tvusername;
     private TextView tvpassword;
     private TextView tvstatus;
-    private Context context;
+    private Activity context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,27 @@ public class LoginActiviy extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
         Boolean status = Boolean.valueOf(prefs.getString("uid", "true"));
-        Log.d(TAG, prefs.getString("uid", "ERROR"));
-
+//        Log.d(TAG, prefs.getString("uid", "ERROR"));
+        Intent intent = null;
         if (!status) {
-            Intent intent = new Intent(LoginActiviy.this, MainActivity.class);
+            String type = prefs.getString("type", "");
+
+            switch (type) {
+
+                case "0":
+                    intent = new Intent(LoginActiviy.this, AdminMainActivity.class);
+
+                    break;
+                case "1":
+
+                    break;
+                case "2":
+                    intent = new Intent(LoginActiviy.this, DeliveryMainActivity.class);
+
+                    break;
+
+            }
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         }
@@ -65,14 +84,16 @@ public class LoginActiviy extends AppCompatActivity {
     }
 
     private void checkUser() {
+        Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
         final SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
         final ProgressDialog progDailog = ProgressDialog.show(this,
                 "Connecting to Server",
                 "Verifying Account....", true);
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.d("LOGIN: ", response);
                         try {
                             JSONObject reader = new JSONObject(response);
                             Boolean status = Boolean.valueOf(reader.getString("status"));
@@ -85,13 +106,32 @@ public class LoginActiviy extends AppCompatActivity {
                                 editor.putString("type", reader.getString("type"));
                                 editor.apply();
 
-                                Toast.makeText(LoginActiviy.this, "Logged In", Toast.LENGTH_SHORT).show();
+                                Intent intent = null;
+                                switch (reader.getString("type")) {
 
-                                Intent intent = new Intent(LoginActiviy.this, MainActivity.class);
+                                    case "0":
+                                        intent = new Intent(LoginActiviy.this, AdminMainActivity.class);
+
+                                        break;
+                                    case "1":
+
+                                        break;
+                                    case "2":
+                                        intent = new Intent(LoginActiviy.this, DeliveryMainActivity.class);
+
+                                        break;
+
+                                }
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
+                                finish();
+
+                                Toast.makeText(LoginActiviy.this, "Logged In", Toast.LENGTH_SHORT).show();
 
                             } else {
                                 tvstatus.setText("Invalid Username/Password");
+                                btnlogin.setEnabled(true);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -24,7 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.chris.bcconsole.MainActivity;
+import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.adapters.InventoryListAdapter;
 import com.example.chris.bcconsole.classes.Products;
@@ -59,7 +59,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ConstraintLayout loading;
     private SearchView search;
-    private MainActivity activity;
+    private AdminMainActivity activity;
 
     @Nullable
     @Override
@@ -72,7 +72,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
         loading = (ConstraintLayout) view.findViewById(R.id.loading);
         status = (TextView) view.findViewById(R.id.status);
 
-        activity = (MainActivity) getActivity();
+        activity = (AdminMainActivity) getActivity();
         header = activity.getHeader();
         search = activity.getSearch();
 
@@ -127,7 +127,8 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
     }
 
     private void generateProductList(final String last_id, final int page_limit, final String query) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
+//        Toast.makeText(getContext(), AdminMainActivity.url, Toast.LENGTH_SHORT).show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AdminMainActivity.url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

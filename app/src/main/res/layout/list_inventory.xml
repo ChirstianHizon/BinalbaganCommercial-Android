@@ -53,8 +53,8 @@
             android:ellipsize="end"
             android:paddingBottom="10dp"
             android:text="Name"
-            android:textColor="#CC0033"
-            android:textSize="16dp" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/desc"
@@ -65,7 +65,6 @@
             android:layout_below="@+id/title"
             android:ellipsize="end"
             android:text="Category"
-            android:textColor="#3399FF"
             android:textSize="14dp" />
     </LinearLayout>
 

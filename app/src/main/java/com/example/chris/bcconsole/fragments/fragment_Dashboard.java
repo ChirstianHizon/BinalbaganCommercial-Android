@@ -14,7 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.chris.bcconsole.MainActivity;
+import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
 
 import org.json.JSONException;
@@ -47,7 +47,7 @@ public class fragment_Dashboard extends android.support.v4.app.Fragment {
     }
 
     private void initializeDashboard() {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AdminMainActivity.url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

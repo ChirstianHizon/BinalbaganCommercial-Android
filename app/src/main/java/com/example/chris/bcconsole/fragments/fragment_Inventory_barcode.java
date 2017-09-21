@@ -16,8 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.chris.bcconsole.InventoryView;
-import com.example.chris.bcconsole.MainActivity;
+import com.example.chris.bcconsole.Admin.InventoryView;
+import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.classes.Products;
 
@@ -45,7 +45,7 @@ public class fragment_Inventory_barcode extends android.support.v4.app.Fragment 
     private ListView lv_barcode;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private String product_Id;
-    private MainActivity main;
+    private AdminMainActivity main;
 
     public fragment_Inventory_barcode() {
 
@@ -55,7 +55,7 @@ public class fragment_Inventory_barcode extends android.support.v4.app.Fragment 
         view = inflater.inflate(R.layout.fragment_inventory_barcode, container, false);
 
         activity = (InventoryView) getActivity();
-        main = (MainActivity) getActivity();
+//        main = (AdminMainActivity) getActivity();
         product_Id = activity.getID();
 
         barcodeCodes = new ArrayList<String>();
@@ -66,7 +66,7 @@ public class fragment_Inventory_barcode extends android.support.v4.app.Fragment 
                 R.layout.list_barcode, barcodeCodes);
 
         lv_barcode.setAdapter(adapter);
-
+        initializeBarcodeDetails(product_Id);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeToRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -83,7 +83,7 @@ public class fragment_Inventory_barcode extends android.support.v4.app.Fragment 
 
     public void initializeBarcodeDetails(final String id) {
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, MainActivity.url,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, AdminMainActivity.url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -94,6 +94,10 @@ public class fragment_Inventory_barcode extends android.support.v4.app.Fragment 
                             for (int x = 1; total >= x; x++) {
                                 JSONObject code = new JSONObject(reader.getString(String.valueOf(x)));
                                 barcodeCodes.add(code.getString("CODE"));
+                            }
+
+                            if (total == 0) {
+                                barcodeCodes.add("No Barcode Available");
                             }
                             adapter.notifyDataSetChanged();
                         } catch (JSONException e) {
