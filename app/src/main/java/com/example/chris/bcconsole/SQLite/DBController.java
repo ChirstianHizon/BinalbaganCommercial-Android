@@ -7,11 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import com.example.chris.bcconsole.classes.Products;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by chris on 28/08/2017.
  */
@@ -36,28 +31,48 @@ public class DBController extends SQLiteOpenHelper {
     private static final String prd_status = "prd_status";
 
 
+    private static final String TABLE_ROUTES = "TABLE_ROUTE";
+
+    private static final String route_id = "route_id";
+    private static final String route_lat = "route_lat";
+    private static final String route_lng = "route_lng";
+    private static final String route_datetimestamp = "route_timestamp";
+    private static final String del_id = "del_id";
+
+
+
     public DBController(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    private String CREATE_ROUTES_TABLE = "CREATE TABLE " + TABLE_ROUTES + "("
+            + route_id + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + route_lat + " TEXT,"
+            + route_lng + " TEXT,"
+            + route_datetimestamp + " DATETIME DEFAULT (datetime('now','localtime')),"
+            + del_id + " TEXT"
+            + ")";
+
+    private String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
+            + prd_id + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+            + prd_name + " TEXT,"
+            + prd_desc + " TEXT,"
+            + prd_datestamp + " TEXT,"
+            + prd_timestamp + " TEXT,"
+            + prd_level + " INTEGER,"
+            + prd_warning + " INTEGER,"
+            + prd_optimal + " INTEGER,"
+            + prd_image + " TEXT,"
+            + prd_category + " TEXT,"
+            + prd_status + " INTEGER"
+            + ")";
+
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_PRODUCTS + "("
-                + prd_id + " INTEGER PRIMARY KEY,"
-                + prd_name + " TEXT,"
-                + prd_desc + " TEXT,"
-                + prd_datestamp + " TEXT,"
-                + prd_timestamp + " TEXT,"
-                + prd_level + " INTEGER,"
-                + prd_warning + " INTEGER,"
-                + prd_optimal + " INTEGER,"
-                + prd_image + " TEXT,"
-                + prd_category + " TEXT,"
-                + prd_status + " INTEGER,"
-                + ")AUTO_INCREMENT=20000000";
         Log.i("SQLite: ", CREATE_PRODUCTS_TABLE);
 
-        db.execSQL(CREATE_PRODUCTS_TABLE);
+//
+        db.execSQL(CREATE_ROUTES_TABLE);
     }
 
     @Override
@@ -65,62 +80,41 @@ public class DBController extends SQLiteOpenHelper {
 
         // Drop older table if existed
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTS);
-
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ROUTES);
 
         onCreate(db);
     }
 
-    public void addProduct(Products prod) {
+    public boolean insertRoute(String lat,String lng,String id){
         SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
 
-        ContentValues values = new ContentValues();
-        values.put(prd_name, prod.getName());
-        values.put(prd_desc, prod.getDesc());
-        values.put(prd_datestamp, prod.getDatestamp());
-        values.put(prd_timestamp, prod.getTimestamp());
-        values.put(prd_level, prod.getLevel());
-        values.put(prd_warning, prod.getWarning());
-        values.put(prd_optimal, prod.getOptimal());
-        values.put(prd_image, prod.getImage());
-        values.put(prd_category, prod.getCategory());
-        values.put(prd_status, prod.getStatus());
+        contentValues.put(route_lat,lat);
+        contentValues.put(route_lng,lng);
+        contentValues.put(del_id,id);
 
-
-        db.insert(TABLE_PRODUCTS, null, values);
-        db.close();
+        long result = db.insert(TABLE_ROUTES,null ,contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
     }
 
-    public List<Products> getAllProducts() {
-        List<Products> productList = new ArrayList<Products>();
-        // Select All Query
-
-        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCTS;
-
+    public Cursor getAllRoute(){
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                Products prod = new Products();
-                prod.setId(Integer.parseInt(cursor.getString(0)));
-                prod.setName(cursor.getString(1));
-                prod.setDesc(cursor.getString(2));
-                prod.setDatestamp(cursor.getString(3));
-                prod.setTimestamp(cursor.getString(4));
-                prod.setLevel(Integer.parseInt(cursor.getString(5)));
-                prod.setWarning(Integer.parseInt(cursor.getString(6)));
-                prod.setOptimal(Integer.parseInt(cursor.getString(7)));
-                prod.setImage(cursor.getString(8));
-                prod.setCategory(cursor.getString(9));
-                prod.setStatus(cursor.getString(10));
-
-                // Adding contact to list
-                productList.add(prod);
-            } while (cursor.moveToNext());
-        }
-
-        // return product list
-        return productList;
+        Cursor result = db.rawQuery("SELECT * FROM " + TABLE_ROUTES + " ORDER BY "+route_id+" ASC",null );
+        return result;
     }
+
+    public Integer deleteAllRouteData () {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_ROUTES, route_id+" >= ?",new String[] {"0"});
+    }
+
+    public Integer deleteSpecRouteData (String id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_ROUTES, route_id+" = ?",new String[] {id});
+    }
+
 }

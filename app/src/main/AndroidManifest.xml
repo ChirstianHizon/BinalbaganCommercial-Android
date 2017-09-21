@@ -33,7 +33,12 @@
         <activity
             android:name=".Delivery.Delivery_View"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Delivery.DeliveryOnProgress"></activity>
+        <activity android:name=".Delivery.DeliveryOnProgress" />
+
+        <service
+            android:name=".Service.LocatorService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
