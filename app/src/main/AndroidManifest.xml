@@ -39,12 +39,15 @@
         <activity
             android:name=".Delivery.Delivery_View"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Delivery.DeliveryOnProgress" />
+        <activity
+            android:name=".Delivery.DeliveryOnProgress"
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <service
             android:name=".Service.LocatorService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true"
+            android:permission="" />
     </application>
 
 </manifest>

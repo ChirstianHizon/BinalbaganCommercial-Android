@@ -40,6 +40,8 @@ public class SettingsActivity extends AppCompatActivity {
                 editor.apply();
                 AdminMainActivity.setNewUrl(edtipconfig.getText().toString());
                 Toast.makeText(SettingsActivity.this, "Saved Settings", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SettingsActivity.this, AdminMainActivity.url, Toast.LENGTH_SHORT).show();
+
             }
         });
 

@@ -57,9 +57,9 @@ public class DeliveryListAdapter extends ArrayAdapter<Delivery> {
 
                 Intent intent = new Intent(getContext(), Delivery_View.class);
                 intent.putExtra("ID", String.valueOf(delivery.getId()));
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-//                ((Activity)context).finish();
+                ((Activity)context).finish();
             }
         });
 

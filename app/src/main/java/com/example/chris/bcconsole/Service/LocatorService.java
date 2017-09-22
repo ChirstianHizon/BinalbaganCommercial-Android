@@ -29,6 +29,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.chris.bcconsole.Delivery.DeliveryOnProgress;
 import com.example.chris.bcconsole.DeliveryMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.SQLite.DBController;
@@ -42,12 +43,13 @@ import java.util.Map;
 
 import static android.R.attr.delay;
 import static com.example.chris.bcconsole.AdminMainActivity.url;
+//import static com.example.chris.bcconsole.AdminMainActivity.url;
 
 public class LocatorService extends Service {
     private DBController myDb;
     private NotificationManager notificationManager;
     private Boolean status;
-    public static final int DEFAULT_LOCATION_INTERVAL = 1000*60*1;//1 min
+    public static final int DEFAULT_LOCATION_INTERVAL = 1000*60*2;//1 min
     private LocationManager mLocationManager;
     private boolean isGPSEnabled;
     private boolean isNetworkEnabled;
@@ -58,6 +60,11 @@ public class LocatorService extends Service {
     private JSONArray coord = new JSONArray();
     private boolean locatorStarted = false;
     private Runnable run;
+
+//    public static String defaulturl = "http://192.168.42.197/BinalbaganCommercial-Thesis/php/mobile.php";
+//    public static String url = defaulturl;
+
+
 
     public LocatorService() {
     }
@@ -71,7 +78,7 @@ public class LocatorService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-
+        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
         myDb = new DBController(this);
 
         status = intent.getBooleanExtra("STATUS",false);
@@ -199,12 +206,10 @@ public class LocatorService extends Service {
             initCoordCounter++;
             Log.d("LOCATOR-COORD", String.valueOf(initCoordCounter));
 
+            Toast.makeText(LocatorService.this, "LOCATION ADDED", Toast.LENGTH_SHORT).show();
             String latitude = String.valueOf(location.getLatitude());
             String longitude = String.valueOf(location.getLongitude());
 
-            if(order_id == null){
-
-            }
 
             //INSERT LOCATION TO DB
             insertLocation(latitude,longitude, order_id);
@@ -212,6 +217,10 @@ public class LocatorService extends Service {
             Log.d("SERVICE","LAT: "+ latitude);
             Log.d("SERVICE","LNG: "+ longitude);
             mLocationManager.removeUpdates(mLocationListener);
+
+            if(status){
+                stopService();
+            }
         }
 
         @Override
@@ -271,7 +280,8 @@ public class LocatorService extends Service {
     }
 
     private void submit(final JSONArray coordobj) {
-        Log.d("COORD_TAG", String.valueOf(coordobj));
+        Log.d("COORD_URL", url);
+        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -281,11 +291,10 @@ public class LocatorService extends Service {
                         try {
                             JSONObject reader = new JSONObject(response);
                             if(reader.getBoolean("RESULT")){
+                                DeliveryOnProgress.setDeliveryStatus(true);
                                 h.removeCallbacks(run);
                                 Log.d("SERVICE","LOCATOR STOPPED");
                                 Toast.makeText(LocatorService.this, "DELIVERY COMPLETE", Toast.LENGTH_SHORT).show();
-                                stopForeground(true);
-                                stopSelf();
                             }else{
                                 Toast.makeText(LocatorService.this, "SERVER ERROR", Toast.LENGTH_SHORT).show();
                             }
@@ -296,7 +305,7 @@ public class LocatorService extends Service {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(LocatorService.this, "Unable to Connect to Server", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() {

@@ -28,7 +28,7 @@ public class AdminMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "Main Activity";
-    public static String defaulturl = "http://192.168.1.36/BinalbaganCommercial-Thesis/php/mobile.php";
+    public static String defaulturl = "http://192.168.42.16/BinalbaganCommercial-Thesis/php/mobile.php";
     public static String url = defaulturl;
     public ListView lv_inventory;
     private Activity context = this;

@@ -68,6 +68,7 @@ public class DeliveryMainActivity extends AppCompatActivity {
         if(!order_id.equals("false")){
 
             resumeDelivery(order_id);
+
         }else{
             String prefurl = prefs.getString("url", AdminMainActivity.defaulturl);
             AdminMainActivity.setNewUrl(prefurl);
@@ -145,7 +146,7 @@ public class DeliveryMainActivity extends AppCompatActivity {
                                 Log.d("DELIVERY-ID: ", order.getString("STATUS"));
                                 String name = order.getString("LNAME") +", "+order.getString("FNAME");
 
-                                if(order.getString("STATUS").equals("200")){
+                                if(false){//order.getString("STATUS").equals("200")){
                                     //resumeDelivery(order.getString("ID"));
                                 }else{
                                 delivery_list.add(
@@ -163,7 +164,7 @@ public class DeliveryMainActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                Toast.makeText(context, "Unable to Connect to Server", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() {
