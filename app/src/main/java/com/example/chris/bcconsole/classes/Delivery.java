@@ -8,9 +8,11 @@ public class Delivery {
 
     private String id,status,type,datestamp,timestamp,recieve,custid,custname;
 
-    public Delivery (String _id,String _datestamp) {
+    public Delivery (String _id,String _custname,String _datestamp,String _status) {
         this.id = _id;
+        this.custname = _custname;
         this.datestamp = _datestamp;
+        this.status = _status;
 
     }
 

@@ -21,9 +21,9 @@ import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.adapters.TabsPageAdapter;
 import com.example.chris.bcconsole.classes.Products;
-import com.example.chris.bcconsole.fragments.fragment_Inventory_barcode;
-import com.example.chris.bcconsole.fragments.fragment_Inventory_description;
-import com.example.chris.bcconsole.fragments.fragment_Inventory_levels;
+import com.example.chris.bcconsole.Admin.fragment_inventory.fragment_Inventory_barcode;
+import com.example.chris.bcconsole.Admin.fragment_inventory.fragment_Inventory_description;
+import com.example.chris.bcconsole.Admin.fragment_inventory.fragment_Inventory_levels;
 
 import org.json.JSONException;
 import org.json.JSONObject;

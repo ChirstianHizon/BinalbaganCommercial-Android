@@ -20,6 +20,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.chris.bcconsole.Admin.DeliveryList;
 import com.example.chris.bcconsole.fragments.fragment_Dashboard;
 import com.example.chris.bcconsole.fragments.fragment_Inventory;
 import com.example.chris.bcconsole.fragments.fragment_Reports;
@@ -28,7 +29,7 @@ public class AdminMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "Main Activity";
-    public static String defaulturl = "http://192.168.42.16/BinalbaganCommercial-Thesis/php/mobile.php";
+    public static String defaulturl = "http://192.168.137.1./BinalbaganCommercial-Console/php/mobile.php";
     public static String url = defaulturl;
     public ListView lv_inventory;
     private Activity context = this;
@@ -167,8 +168,9 @@ public class AdminMainActivity extends AppCompatActivity
             search.clearFocus();
             fragment_Inventory inventory = new fragment_Inventory();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment, inventory).commit();
-        } else if (id == R.id.nav_reports) {
-
+        } else if (id == R.id.nav_delivery) {
+            Intent intent = new Intent(context, DeliveryList.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -25,7 +25,7 @@
         android:layout_toLeftOf="@+id/icon"
         android:layout_toStartOf="@+id/icon"
         android:orientation="vertical"
-        android:paddingLeft="10dp">
+        android:paddingLeft="15dp">
 
         <TextView
             android:id="@+id/id"

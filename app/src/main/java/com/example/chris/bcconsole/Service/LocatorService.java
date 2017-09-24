@@ -295,6 +295,7 @@ public class LocatorService extends Service {
                                 h.removeCallbacks(run);
                                 Log.d("SERVICE","LOCATOR STOPPED");
                                 Toast.makeText(LocatorService.this, "DELIVERY COMPLETE", Toast.LENGTH_SHORT).show();
+                                stopSelf();
                             }else{
                                 Toast.makeText(LocatorService.this, "SERVER ERROR", Toast.LENGTH_SHORT).show();
                             }

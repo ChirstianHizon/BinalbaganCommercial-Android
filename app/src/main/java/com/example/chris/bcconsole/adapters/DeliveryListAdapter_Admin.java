@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.chris.bcconsole.Delivery.Delivery_View;
+import com.example.chris.bcconsole.Admin.DeliveryView;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.classes.Delivery;
 
@@ -21,12 +21,12 @@ import java.util.List;
  * Created by chris on 05/09/2017.
  */
 
-public class DeliveryListAdapter extends ArrayAdapter<Delivery> {
+public class DeliveryListAdapter_Admin extends ArrayAdapter<Delivery> {
 
     Context context;
 
-    public DeliveryListAdapter(Context context, int resourceId,
-                               List<Delivery> items) {
+    public DeliveryListAdapter_Admin(Context context, int resourceId,
+                                     List<Delivery> items) {
         super(context, resourceId, items);
         this.context = context;
     }
@@ -38,14 +38,16 @@ public class DeliveryListAdapter extends ArrayAdapter<Delivery> {
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_delivery, null);
+            convertView = mInflater.inflate(R.layout.list_delivery_admin, null);
             holder = new ViewHolder();
 
             holder.relRow = (RelativeLayout) convertView.findViewById(R.id.row);
             holder.txtId = (TextView) convertView.findViewById(R.id.id);
             holder.txtDesc = (TextView) convertView.findViewById(R.id.desc);
             holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
+            holder.txtDate = (TextView) convertView.findViewById(R.id.date);
             holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
+
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -55,17 +57,19 @@ public class DeliveryListAdapter extends ArrayAdapter<Delivery> {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getContext(), Delivery_View.class);
+                Intent intent = new Intent(getContext(), DeliveryView.class);
                 intent.putExtra("ID", String.valueOf(delivery.getId()));
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
-                ((Activity)context).finish();
             }
         });
+//        if(delivery.getStatus().equals("100")){
+//            holder.txtTitle.setTextColor(Color.GREEN);
+//        }
 
         holder.txtId.setText(String.valueOf(delivery.getId()));
         holder.txtTitle.setText(delivery.getId());
-        holder.txtDesc.setText(delivery.getDatestamp());
+        holder.txtDesc.setText(delivery.getCustname());
+        holder.txtDate.setText(delivery.getDatestamp());
         return convertView;
     }
 
@@ -76,6 +80,7 @@ public class DeliveryListAdapter extends ArrayAdapter<Delivery> {
         TextView txtId;
         TextView txtDesc;
         RelativeLayout relRow;
+        TextView txtDate;
     }
 
 }

@@ -19,15 +19,13 @@ import com.example.chris.bcconsole.SQLite.DBController;
 import com.example.chris.bcconsole.Service.LocatorService;
 import com.example.chris.bcconsole.SettingsActivity;
 
-import org.json.JSONArray;
-
 public class DeliveryOnProgress extends AppCompatActivity {
 
     private Button btnend;
     private Activity context =this;
     private DBController myDb;
-    private JSONArray coord;
     private static Boolean isDeliveryFinised = false;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +49,7 @@ public class DeliveryOnProgress extends AppCompatActivity {
                 endLocator();
                 if(isDeliveryFinised){
 
-                    SharedPreferences preferences = getSharedPreferences("DELIVERY",MODE_PRIVATE);
+                    preferences = getSharedPreferences("DELIVERY",MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.clear();
                     editor.apply();
@@ -117,6 +115,7 @@ public class DeliveryOnProgress extends AppCompatActivity {
     }
 
     public static void setDeliveryStatus(boolean stat){
+
         isDeliveryFinised = stat;
     }
 

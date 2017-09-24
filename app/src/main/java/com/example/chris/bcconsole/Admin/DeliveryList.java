@@ -1,4 +1,4 @@
-package com.example.chris.bcconsole;
+package com.example.chris.bcconsole.Admin;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -10,7 +10,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -19,8 +21,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.chris.bcconsole.Delivery.DeliveryOnProgress;
-import com.example.chris.bcconsole.adapters.DeliveryListAdapter_Delivery;
+import com.example.chris.bcconsole.AdminMainActivity;
+import com.example.chris.bcconsole.LoginActiviy;
+import com.example.chris.bcconsole.R;
+import com.example.chris.bcconsole.SettingsActivity;
+import com.example.chris.bcconsole.adapters.DeliveryListAdapter_Admin;
 import com.example.chris.bcconsole.classes.Delivery;
 
 import org.json.JSONException;
@@ -28,74 +33,52 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.example.chris.bcconsole.AdminMainActivity.url;
 
-public class DeliveryMainActivity extends AppCompatActivity {
-
+public class DeliveryList extends AppCompatActivity {
     private Activity context = this;
+    private ArrayList<Delivery> delivery_list;
     private ListView lv_main;
-    private DeliveryListAdapter_Delivery adapter;
-    private List<Delivery> delivery_list;
+    private DeliveryListAdapter_Admin adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ProgressBar progbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delivery_main);
+        setContentView(R.layout.activity_delivery_list);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
-        String uid = prefs.getString("uid", "true");
-        Log.i("USER_ID: ", "UID:" + uid);
-
-        if (Boolean.valueOf(uid)) {
-            Intent intent = new Intent(context, LoginActiviy.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
-            finish();
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
 
-        SharedPreferences devprefs = getSharedPreferences("DELIVERY", MODE_PRIVATE);
-        String order_id = devprefs.getString("id", "false");
+        delivery_list = new ArrayList<Delivery>();
+        lv_main = (ListView)findViewById(R.id.lv_main);
+        adapter = new DeliveryListAdapter_Admin(context, R.layout.list_delivery_delivery, delivery_list);
+        lv_main.setAdapter(adapter);
 
-        Log.d("DELIVERY-PREFS",order_id);
-        if(!order_id.equals("false")){
+        checkDelivery();
 
-            resumeDelivery(order_id);
-
-        }else{
-            String prefurl = prefs.getString("url", AdminMainActivity.defaulturl);
-            AdminMainActivity.setNewUrl(prefurl);
-            Log.d("URL:",url);
-            Log.d("USER_ID: ", "UID:" + uid);
+        progbar = (ProgressBar)findViewById(R.id.progbar);
 
 
-            delivery_list = new ArrayList<Delivery>();
-            lv_main = (ListView)findViewById(R.id.lv_main);
-            adapter = new DeliveryListAdapter_Delivery(context, R.layout.list_delivery_delivery, delivery_list);
-            lv_main.setAdapter(adapter);
-
-            checkDelivery();
-
-
-            mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeToRefresh);
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    adapter.clear();
-                    checkDelivery();
-                    mSwipeRefreshLayout.setRefreshing(false);
-                }
-            });
-
-        }
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                progbar.setVisibility(View.VISIBLE);
+                adapter.clear();
+                checkDelivery();
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -119,11 +102,13 @@ public class DeliveryMainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
             return true;
-        }else if(id == R.id.action_settings){
+        } else if (id == R.id.action_settings) {
 
             Intent intent = new Intent(context, SettingsActivity.class);
             startActivity(intent);
 
+        } else if (item.getItemId() == android.R.id.home) {
+            finish(); // close this activity and return to preview activity (if there is any)
         }
 
         return super.onOptionsItemSelected(item);
@@ -146,51 +131,35 @@ public class DeliveryMainActivity extends AppCompatActivity {
                                 Log.d("DELIVERY-ID: ", order.getString("STATUS"));
                                 String name = order.getString("LNAME") +", "+order.getString("FNAME");
 
-                                if(order.getString("STATUS").equals("200")){
-                                    resumeDelivery(order.getString("ID"));
-                                }else{
-                                delivery_list.add(
-                                        new Delivery(
-                                                order.getString("ID"),
-                                                name,
-                                                order.getString("DATE"),
-                                                order.getString("STATUS")
-                                        ));
-                                }
+                            delivery_list.add(
+                                    new Delivery(
+                                            order.getString("ID"),
+                                            name,
+                                            order.getString("DATE"),
+                                            order.getString("STATUS")
+                                    ));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        progbar.setVisibility(View.GONE);
                         adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progbar.setVisibility(View.GONE);
                 Toast.makeText(context, "Unable to Connect to Server", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("access", "Binalbagan_Commercial_MOBILE_Access");
-                params.put("type", "6");
+                params.put("type", "10");
                 return params;
             }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
-    }
-
-    private void resumeDelivery(String id){
-
-        SharedPreferences.Editor editor = getSharedPreferences("DELIVERY", MODE_PRIVATE).edit();
-        editor.putString("id", id);
-        editor.apply();
-        Toast.makeText(context, "Resuming Delivery", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(context, DeliveryOnProgress.class);
-        intent.putExtra("ID", id);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
-
     }
 }

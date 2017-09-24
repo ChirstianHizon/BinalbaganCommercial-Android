@@ -144,7 +144,7 @@ public class LoginActiviy extends AppCompatActivity {
                 tvstatus.setText("Server Error");
                 progDailog.dismiss();
                 btnlogin.setEnabled(true);
-                Toast.makeText(context, "Unaable to Connect to Server", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Unable to Connect to Server", Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() {

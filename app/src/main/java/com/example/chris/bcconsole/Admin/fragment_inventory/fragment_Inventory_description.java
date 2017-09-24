@@ -1,4 +1,4 @@
-package com.example.chris.bcconsole.fragments;
+package com.example.chris.bcconsole.Admin.fragment_inventory;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
