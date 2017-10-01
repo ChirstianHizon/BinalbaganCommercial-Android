@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.example.chris.bcconsole.Admin.DeliveryList;
 import com.example.chris.bcconsole.fragments.fragment_Dashboard;
 import com.example.chris.bcconsole.fragments.fragment_Inventory;
 import com.example.chris.bcconsole.fragments.fragment_Reports;
+import com.squareup.picasso.Picasso;
 
 public class AdminMainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -31,6 +33,8 @@ public class AdminMainActivity extends AppCompatActivity
     private static final String TAG = "Main Activity";
     public static String defaulturl = "http://192.168.137.1./BinalbaganCommercial-Console/php/mobile.php";
     public static String url = defaulturl;
+
+
     public ListView lv_inventory;
     private Activity context = this;
     private TextView header;
@@ -82,7 +86,6 @@ public class AdminMainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -94,6 +97,7 @@ public class AdminMainActivity extends AppCompatActivity
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        BottomNavigationViewHelper.disableShiftMode(navigation);
 
         SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
         String uid = prefs.getString("uid", "true");
@@ -113,6 +117,65 @@ public class AdminMainActivity extends AppCompatActivity
         header = (TextView) findViewById(R.id.header);
 
         lv_inventory = (ListView) findViewById(R.id.lv_main);
+        setUserProfile();
+
+        header.setVisibility(View.VISIBLE);
+        search.setVisibility(View.GONE);
+        search.clearFocus();
+        header.setText("Dashboard");
+        fragment_Dashboard dashboard = new fragment_Dashboard();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment, dashboard).commit();
+    }
+
+    private void setUserProfile(){
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View header=navigationView.getHeaderView(0);
+
+        TextView fullname = (TextView)header.findViewById(R.id.username);
+        TextView type = (TextView)header.findViewById(R.id.type);
+        ImageView image = (ImageView)header.findViewById(R.id.iv_profile);
+
+        SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
+        String fname = prefs.getString("fname", "Not Available");
+        String lname = prefs.getString("lname", "Not Available");
+        String utype = prefs.getString("type", "");
+        String uimage = prefs.getString("image", "");
+
+        switch (utype){
+            case "0":
+                type.setText("Administrator");
+                break;
+            case "1":
+                type.setText("Cashier");
+                break;
+            case "2":
+                type.setText("Driver");
+                break;
+            case "":
+                type.setText("Type Error");
+                break;
+        }
+        fullname.setText(lname+", "+fname);
+        Log.d("IMAGE:",uimage);
+        if(image.equals("") && image != null){
+            Picasso.with(context)
+                    .load(R.drawable.logo)
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .resize(304, 170)
+                    .centerCrop()
+                    .into(image);
+
+        }else{
+            Picasso.with(context)
+                    .load(uimage)
+                    .placeholder(R.drawable.logo)
+                    .error(R.drawable.logo)
+                    .resize(75, 75)
+                    .centerCrop()
+                    .into(image);
+        }
     }
 
     @Override

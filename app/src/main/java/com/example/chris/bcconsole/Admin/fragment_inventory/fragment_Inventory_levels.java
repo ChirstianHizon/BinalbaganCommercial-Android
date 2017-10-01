@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.example.chris.bcconsole.Admin.InventoryView;
 import com.example.chris.bcconsole.R;
-import com.example.chris.bcconsole.classes.Products;
+import com.example.chris.bcconsole.Objects.Products;
 
 /**
  * Created by chris on 05/09/2017.

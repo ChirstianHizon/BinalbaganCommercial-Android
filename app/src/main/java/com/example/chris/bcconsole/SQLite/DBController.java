@@ -103,6 +103,14 @@ public class DBController extends SQLiteOpenHelper {
         return result;
     }
 
+    public int countRoute(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor query = db.rawQuery("SELECT * FROM " + TABLE_ROUTES + " ORDER BY "+route_id+" ASC",null );
+        int cnt = query.getCount();
+        return cnt;
+    }
+
     public Integer deleteAllRouteData () {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(TABLE_ROUTES, route_id+" >= ?",new String[] {"0"});

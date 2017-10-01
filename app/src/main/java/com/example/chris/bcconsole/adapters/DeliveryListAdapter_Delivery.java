@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.example.chris.bcconsole.Delivery.Delivery_View;
 import com.example.chris.bcconsole.R;
-import com.example.chris.bcconsole.classes.Delivery;
+import com.example.chris.bcconsole.Objects.Delivery;
 
 import java.util.List;
 

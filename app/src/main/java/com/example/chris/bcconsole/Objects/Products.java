@@ -1,4 +1,4 @@
-package com.example.chris.bcconsole.classes;
+package com.example.chris.bcconsole.Objects;
 
 /**
  * Created by chris on 28/08/2017.
@@ -6,22 +6,26 @@ package com.example.chris.bcconsole.classes;
 
 public class Products {
 
-    //   ------  ID ----------------
-    private int id;
 
 //    ------  DESCRIPTION ------
 
-    private String name, desc, datestamp, timestamp, image, category, status, price;
+    private String id,name, desc, datestamp, timestamp, image, category, status, price,qty;
 
 //    ------  LEVELS  -----------
 
     private int level, optimal, warning;
 
 //    ------  GET AND  SET --------
-public Products() {
-}
 
-    public Products(int _id, String _name, String _desc, String _datestamp, String _timestamp,
+
+    public Products(String _id, String _name, String _price, String _qty) {
+        this.id = _id;
+        this.name = _name;
+        this.price = _price;
+        this.qty = _qty;
+    }
+
+    public Products(String _id, String _name, String _desc, String _datestamp, String _timestamp,
                     String _price, int _level, int _optimal, int _warning,
                     String _image, String _category, String _status) {
 
@@ -39,9 +43,9 @@ public Products() {
         this.status = _status;
     }
 
-    public Products(String _id, String _name, String _category, String _status) {
+    public Products(String _id, String _name, String _category, String _status,int x) {
 
-        this.id = Integer.valueOf(_id);
+        this.id = _id;
         this.name = _name;
         this.category = _category;
         this.status = _status;
@@ -63,11 +67,11 @@ public Products() {
         this.status = _status;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -79,9 +83,7 @@ public Products() {
         this.name = name;
     }
 
-    public String getDesc() {
-        return desc;
-    }
+    public String getDesc() { return desc; }
 
     public void setDesc(String desc) {
         this.desc = desc;
@@ -157,5 +159,13 @@ public Products() {
 
     public void setPrice(String price) {
         this.price = price;
+    }
+
+    public String getQty() {
+        return qty;
+    }
+
+    public void setQty(String qty) {
+        this.qty = qty;
     }
 }

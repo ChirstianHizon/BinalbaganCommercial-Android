@@ -32,7 +32,7 @@ import static com.example.chris.bcconsole.AdminMainActivity.url;
 
 public class Delivery_View extends AppCompatActivity {
 
-    private String TAG ="Delivery ";
+    private String TAG ="Reports ";
     private String order_id = "",status;
     private TextView tvstatus,tvorderid,tvcustname,tvorderdate,tvtitems,tvtamount;
     private DBController myDb;
@@ -70,7 +70,7 @@ public class Delivery_View extends AppCompatActivity {
         btndelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Delivery Started", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Reports Started", Toast.LENGTH_SHORT).show();
                 resumeDelivery(order_id);
             }
         });
@@ -163,7 +163,7 @@ public class Delivery_View extends AppCompatActivity {
                             editor.putString("id", reader.getString("ID"));
                             editor.apply();
 
-                            Toast.makeText(context, "Resuming Delivery", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Resuming Reports", Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(context, DeliveryOnProgress.class);
                             intent.putExtra("ID", reader.getString("ID"));

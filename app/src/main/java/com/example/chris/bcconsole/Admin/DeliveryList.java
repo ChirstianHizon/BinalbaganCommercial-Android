@@ -26,7 +26,7 @@ import com.example.chris.bcconsole.LoginActiviy;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.SettingsActivity;
 import com.example.chris.bcconsole.adapters.DeliveryListAdapter_Admin;
-import com.example.chris.bcconsole.classes.Delivery;
+import com.example.chris.bcconsole.Objects.Delivery;
 
 import org.json.JSONException;
 import org.json.JSONObject;

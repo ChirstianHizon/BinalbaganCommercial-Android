@@ -39,7 +39,7 @@ public class fragment_delivery_details extends android.support.v4.app.Fragment {
     private TextView custaddress;
     private TextView custnotes;
     private DeliveryView activity;
-    private String delivery_id;
+    private String order_id;
     private TextView custcontact;
 
     public fragment_delivery_details() {
@@ -59,9 +59,9 @@ public class fragment_delivery_details extends android.support.v4.app.Fragment {
         custcontact = (TextView)view.findViewById(R.id.custcontact);
 
         activity = (DeliveryView) getActivity();
-        delivery_id = activity.getDelivery_id();
+        order_id = activity.getOrder_id();
 
-        initializeDeliveryDetails(delivery_id);
+        initializeDeliveryDetails(order_id);
 
         return view;
     }

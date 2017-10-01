@@ -27,7 +27,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.adapters.InventoryListAdapter;
-import com.example.chris.bcconsole.classes.Products;
+import com.example.chris.bcconsole.Objects.Products;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,6 +60,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
     private ConstraintLayout loading;
     private SearchView search;
     private AdminMainActivity activity;
+    private RequestQueue requestQueue;
 
     @Nullable
     @Override
@@ -153,16 +154,16 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                                                 product.getString("NAME") + " | " +
                                                 product.getString("CATEGORY") + " | " +
                                                 product.getString("STATUS") + " | " +
-                                                Boolean.valueOf(Integer.valueOf(product.getString("AVAIL")) == 1)
+                                                (Integer.valueOf(product.getString("AVAIL")) == 1)
                                         );
 
-                                        if (Boolean.valueOf(Integer.valueOf(product.getString("AVAIL")) == 1) || viewDeleted) {
+                                        if (Integer.valueOf(product.getString("AVAIL")) == 1 || viewDeleted) {
                                             product_list.add(
                                                     new Products(
                                                             product.getString("ID"),
                                                             product.getString("NAME"),
                                                             product.getString("CATEGORY"),
-                                                            product.getString("STATUS")
+                                                            product.getString("STATUS"),0
                                                     ));
                                             adapter.notifyDataSetChanged();
                                         }
@@ -203,7 +204,7 @@ public class fragment_Inventory extends android.support.v4.app.Fragment {
                 return params;
             }
         };
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue = Volley.newRequestQueue(getContext());
         requestQueue.add(stringRequest);
 
         pb_center.setVisibility(View.GONE);

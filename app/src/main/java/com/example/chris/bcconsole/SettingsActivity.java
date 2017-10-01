@@ -1,5 +1,6 @@
 package com.example.chris.bcconsole;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +9,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.chris.bcconsole.AdminMainActivity.url;
+
 public class SettingsActivity extends AppCompatActivity {
+    private Activity context = this;
+    private TextView status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +48,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         final EditText edtipconfig = (EditText) findViewById(R.id.edt_ipconfig);
         Button btnsave = (Button) findViewById(R.id.btn_save);
+        Button btncheck = (Button)findViewById(R.id.btncheck);
+        status = (TextView)findViewById(R.id.tvstat);
 
         edtipconfig.setText(AdminMainActivity.url);
 
@@ -45,6 +66,13 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        btncheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pingWebServer();
+            }
+        });
+
     }
 
     @Override
@@ -55,5 +83,41 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void pingWebServer() {
+        status.setText("Connecting...");
+//        Toast.makeText(context, AdminMainActivity.url, Toast.LENGTH_SHORT).show();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject main = new JSONObject(response);
+                            Boolean connection = main.getBoolean("main");
+                            if(connection){
+                                status.setText("Connection established");
+                            }else{
+                                status.setText("Server Error");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    };
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                status.setText("Unable to Established Connection");
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("access", "Binalbagan_Commercial_MOBILE_Access");
+                params.put("type", "0");
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 }

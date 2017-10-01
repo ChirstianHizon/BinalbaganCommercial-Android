@@ -29,7 +29,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tvstat"
         android:layout_width="0dp"
         android:layout_height="17dp"
         android:layout_marginEnd="8dp"
@@ -58,7 +58,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/tvstat" />
 
     <Button
         android:id="@+id/btn_save"
@@ -74,4 +74,18 @@
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp" />
+
+    <Button
+        android:id="@+id/btncheck"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Check Connection"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@+id/edt_ipconfig" />
+
 </android.support.constraint.ConstraintLayout>

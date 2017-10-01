@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:gravity="end"
-                        android:text="0 delivery"
+                        android:text="0 reports"
                         android:textColor="@android:color/background_light" />
                 </LinearLayout>
 

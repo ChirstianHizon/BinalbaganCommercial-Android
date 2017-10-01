@@ -1,4 +1,4 @@
-package com.example.chris.bcconsole.classes;
+package com.example.chris.bcconsole.Objects;
 
 /**
  * Created by chris on 20/09/2017.
@@ -80,4 +80,3 @@ public class Delivery {
         this.custname = custname;
     }
 }
-

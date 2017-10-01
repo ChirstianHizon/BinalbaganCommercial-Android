@@ -20,7 +20,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.adapters.TabsPageAdapter;
-import com.example.chris.bcconsole.classes.Products;
+import com.example.chris.bcconsole.Objects.Products;
 import com.example.chris.bcconsole.Admin.fragment_inventory.fragment_Inventory_barcode;
 import com.example.chris.bcconsole.Admin.fragment_inventory.fragment_Inventory_description;
 import com.example.chris.bcconsole.Admin.fragment_inventory.fragment_Inventory_levels;
@@ -104,7 +104,7 @@ public class InventoryView extends AppCompatActivity {
                             progbar.setVisibility(View.GONE);
                             setTitle(reader.getString("NAME"));
                             prod = new Products(
-                                    Integer.valueOf(product_ID),
+                                    product_ID,
                                     reader.getString("NAME"),
                                     reader.getString("DESC"),
                                     reader.getString("DATESTAMP"),

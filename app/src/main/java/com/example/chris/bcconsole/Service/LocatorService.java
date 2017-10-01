@@ -18,8 +18,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,7 +32,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.Delivery.DeliveryOnProgress;
-import com.example.chris.bcconsole.DeliveryMainActivity;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.SQLite.DBController;
 
@@ -49,7 +50,7 @@ public class LocatorService extends Service {
     private DBController myDb;
     private NotificationManager notificationManager;
     private Boolean status;
-    public static final int DEFAULT_LOCATION_INTERVAL = 1000*60*2;//1 min
+    public static final int DEFAULT_LOCATION_INTERVAL = 1000*60*2;//5 min
     private LocationManager mLocationManager;
     private boolean isGPSEnabled;
     private boolean isNetworkEnabled;
@@ -64,7 +65,12 @@ public class LocatorService extends Service {
 //    public static String defaulturl = "http://192.168.42.197/BinalbaganCommercial-Thesis/php/mobile.php";
 //    public static String url = defaulturl;
 
-
+    public static final String
+            ACTION_LOCATION_BROADCAST = LocatorService.class.getName() + "LocationBroadcast",
+            EXTRA_LATITUDE = "extra_latitude",
+            EXTRA_LONGITUDE = "extra_longitude",
+            EXTRA_COUNTER = "extra_counter",
+            EXTRA_STOP = "extra_stop";
 
     public LocatorService() {
     }
@@ -106,40 +112,32 @@ public class LocatorService extends Service {
     }
 
 
-    private void DBFunctions(){
-        //TEST FOR DB CONTROLER
-        Boolean test = myDb.insertRoute("test","test", order_id);
-        Log.d("DB-INSERT", String.valueOf(test));
-
-        Cursor route = myDb.getAllRoute();
-        while(route.moveToNext()) {
-            String id = route.getString(0);
-            String lat = route.getString(1);
-            String lng = route.getString(2);
-            String datetime = route.getString(3);
-            String orderid = route.getString(4);
-            Log.d("DB-VIEW", id + ","+lat + ","+lng + ","+datetime+ ","+orderid);
+    private void sendBroadcastMessage(Location location) {
+        if (location != null) {
+            int routecount = myDb.countRoute();
+            Intent intent = new Intent(ACTION_LOCATION_BROADCAST);
+            intent.putExtra(EXTRA_LATITUDE, location.getLatitude());
+            intent.putExtra(EXTRA_LONGITUDE, location.getLongitude());
+            intent.putExtra(EXTRA_COUNTER, routecount);
+            intent.putExtra(EXTRA_STOP, true);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
+    }
 
-        Integer del = myDb.deleteAllRouteData();
-        Log.d("DB-DELETE", String.valueOf(del));
-
-        route = myDb.getAllRoute();
-        while(route.moveToNext()) {
-            String id = route.getString(0);
-            String lat = route.getString(1);
-            String lng = route.getString(2);
-            String datetime = route.getString(3);
-            Log.d("DB-VIEW", id + ","+lat + ","+lng + ","+datetime);
+    private void sendStopBrodMessage(boolean status){
+        if(status){
+            Intent intent = new Intent(ACTION_LOCATION_BROADCAST);
+            intent.putExtra(EXTRA_STOP, true);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
     public void Notification(){
-        Intent intent = new Intent(this, DeliveryMainActivity.class);
+        Intent intent = new Intent(this, DeliveryOnProgress.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setTicker("Delivery on Progress..").setContentTitle("BC Console")
-                .setContentText("Delivery On Progress...")
+                .setTicker("Reports on Progress..").setContentTitle("BC Console")
+                .setContentText("Reports On Progress...")
                 .setSmallIcon(R.drawable.logo)
                 .setOngoing(true)
                 .setContentIntent(pIntent);
@@ -187,15 +185,26 @@ public class LocatorService extends Service {
         isNetworkEnabled = mLocationManager
                 .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
         if (isNetworkAvailable()) {
-            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10, DEFAULT_LOCATION_INTERVAL, mLocationListener);
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.NETWORK_PROVIDER,
+                    0,
+                    6000,
+                    mLocationListener);
 
         } else {
-            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10, DEFAULT_LOCATION_INTERVAL, mLocationListener);
+            mLocationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER,
+                    0,
+                    6000,
+                    mLocationListener);
         }
     }
 
@@ -203,23 +212,29 @@ public class LocatorService extends Service {
 
         @Override
         public void onLocationChanged(Location location) {
-            initCoordCounter++;
-            Log.d("LOCATOR-COORD", String.valueOf(initCoordCounter));
+            if(location.getAccuracy() < 210.0) {
+                initCoordCounter++;
+                Log.d("LOCATOR-COORD", String.valueOf(initCoordCounter));
 
-            Toast.makeText(LocatorService.this, "LOCATION ADDED", Toast.LENGTH_SHORT).show();
-            String latitude = String.valueOf(location.getLatitude());
-            String longitude = String.valueOf(location.getLongitude());
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                v.vibrate(100);
 
+//            Toast.makeText(LocatorService.this, "LOCATION ADDED", Toast.LENGTH_SHORT).show();
+                String latitude = String.valueOf(location.getLatitude());
+                String longitude = String.valueOf(location.getLongitude());
 
-            //INSERT LOCATION TO DB
-            insertLocation(latitude,longitude, order_id);
+                sendBroadcastMessage(location);
 
-            Log.d("SERVICE","LAT: "+ latitude);
-            Log.d("SERVICE","LNG: "+ longitude);
-            mLocationManager.removeUpdates(mLocationListener);
+                //INSERT LOCATION TO DB
+                insertLocation(latitude,longitude, order_id);
 
-            if(status){
-                stopService();
+                Log.d("SERVICE","LAT: "+ latitude);
+                Log.d("SERVICE","LNG: "+ longitude);
+                mLocationManager.removeUpdates(mLocationListener);
+
+                if(status){
+                    stopService();
+                }
             }
         }
 
@@ -276,12 +291,12 @@ public class LocatorService extends Service {
         }
         Log.d("COORD", String.valueOf(coord));
         submit(coord);
-        myDb.deleteAllRouteData();
+
     }
 
     private void submit(final JSONArray coordobj) {
         Log.d("COORD_URL", url);
-        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -291,10 +306,12 @@ public class LocatorService extends Service {
                         try {
                             JSONObject reader = new JSONObject(response);
                             if(reader.getBoolean("RESULT")){
+                                myDb.deleteAllRouteData();
                                 DeliveryOnProgress.setDeliveryStatus(true);
                                 h.removeCallbacks(run);
                                 Log.d("SERVICE","LOCATOR STOPPED");
                                 Toast.makeText(LocatorService.this, "DELIVERY COMPLETE", Toast.LENGTH_SHORT).show();
+                                sendStopBrodMessage(true);
                                 stopSelf();
                             }else{
                                 Toast.makeText(LocatorService.this, "SERVER ERROR", Toast.LENGTH_SHORT).show();

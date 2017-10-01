@@ -19,7 +19,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.Admin.InventoryView;
 import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.R;
-import com.example.chris.bcconsole.classes.Products;
+import com.example.chris.bcconsole.Objects.Products;
 
 import org.json.JSONException;
 import org.json.JSONObject;

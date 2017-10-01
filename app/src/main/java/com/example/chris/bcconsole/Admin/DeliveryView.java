@@ -17,7 +17,7 @@ public class DeliveryView extends AppCompatActivity {
 
     private TabsPageAdapter mTabsPageAdapter;
     private ViewPager mViewPager;
-    private String delivery_id;
+    private String order_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class DeliveryView extends AppCompatActivity {
         setupViewPager(mViewPager);
 
         Intent intent = getIntent();
-        delivery_id = intent.getStringExtra("ID");
+        order_id = intent.getStringExtra("ID");
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -59,7 +59,7 @@ public class DeliveryView extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    public String getDelivery_id(){
-        return delivery_id;
+    public String getOrder_id(){
+        return order_id;
     }
 }

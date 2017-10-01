@@ -1,15 +1,20 @@
 package com.example.chris.bcconsole.Delivery;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.chris.bcconsole.DeliveryMainActivity;
@@ -26,6 +31,10 @@ public class DeliveryOnProgress extends AppCompatActivity {
     private DBController myDb;
     private static Boolean isDeliveryFinised = false;
     private SharedPreferences preferences;
+    private TextView tvlat;
+    private TextView tvlng;
+    private TextView tvcounter;
+    private TextView tvorderno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +51,12 @@ public class DeliveryOnProgress extends AppCompatActivity {
         runLocator(order_id);
 
         btnend = (Button)findViewById(R.id.btn_end_delivery);
+        tvlat = (TextView)findViewById(R.id.tv_lat);
+        tvlng = (TextView)findViewById(R.id.tv_lng);
+        tvcounter = (TextView)findViewById(R.id.tv_counter);
+        tvorderno = (TextView)findViewById(R.id.tv_orderno);
+
+        tvorderno.setText(order_id);
 
         btnend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +81,21 @@ public class DeliveryOnProgress extends AppCompatActivity {
                 }
             }
         });
+
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        double latitude = intent.getDoubleExtra(LocatorService.EXTRA_LATITUDE, 0);
+                        double longitude = intent.getDoubleExtra(LocatorService.EXTRA_LONGITUDE, 0);
+                        int routecount = intent.getIntExtra(LocatorService.EXTRA_COUNTER, 0);
+                        tvlat.setText(String.valueOf( latitude ));
+                        tvlng.setText(String.valueOf( longitude ));
+                        tvcounter.setText(String.valueOf( routecount ));
+                    }
+                }, new IntentFilter(LocatorService.ACTION_LOCATION_BROADCAST)
+        );
     }
 
 

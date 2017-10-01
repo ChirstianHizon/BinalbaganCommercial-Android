@@ -54,12 +54,27 @@
                 android:id="@+id/textView22"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="Location Counter"
+                tools:layout_editor_absoluteX="8dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <TextView
+                android:id="@+id/tv_counter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="( Latitude )"
+                android:textAlignment="textEnd" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="Current Latitude"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="0dp" />
 
             <TextView
-                android:id="@+id/textView23"
+                android:id="@+id/tv_lat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Latitude )"
@@ -74,7 +89,7 @@
                 tools:layout_editor_absoluteY="0dp" />
 
             <TextView
-                android:id="@+id/textView25"
+                android:id="@+id/tv_lng"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Longitude )"
@@ -90,7 +105,7 @@
                 tools:layout_editor_absoluteY="0dp" />
 
             <TextView
-                android:id="@+id/textView27"
+                android:id="@+id/tv_timestarted"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Time Started )"
@@ -105,7 +120,7 @@
                 tools:layout_editor_absoluteY="0dp" />
 
             <TextView
-                android:id="@+id/textView29"
+                android:id="@+id/tv_elapsed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Time Elapsed )"
@@ -123,7 +138,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
-                android:id="@+id/textView31"
+                android:id="@+id/tv_orderno"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="(Order Id)"
@@ -144,7 +159,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
-                android:id="@+id/textView36"
+                android:id="@+id/tv_custname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Customer Name )"
@@ -166,7 +181,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
-                android:id="@+id/textView38"
+                android:id="@+id/tv_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Address )"
@@ -187,7 +202,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
             <TextView
-                android:id="@+id/textView40"
+                android:id="@+id/tv_notes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="( Notes )"
@@ -196,6 +211,19 @@
                 app:layout_constraintLeft_toLeftOf="@+id/textView8"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+            <Button
+                android:id="@+id/btn_vieworder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
+                android:text="View Order List"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
         </LinearLayout>
     </ScrollView>

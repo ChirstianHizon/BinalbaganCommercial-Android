@@ -21,7 +21,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.Delivery.DeliveryOnProgress;
 import com.example.chris.bcconsole.adapters.DeliveryListAdapter_Delivery;
-import com.example.chris.bcconsole.classes.Delivery;
+import com.example.chris.bcconsole.Objects.Delivery;
 
 import org.json.JSONException;
 import org.json.JSONObject;

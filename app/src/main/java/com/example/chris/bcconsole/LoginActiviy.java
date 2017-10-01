@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,7 @@ public class LoginActiviy extends AppCompatActivity {
     private TextView tvpassword;
     private TextView tvstatus;
     private Activity context = this;
+    private ImageButton ivlogo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,21 @@ public class LoginActiviy extends AppCompatActivity {
             }
         });
 
+        ivlogo = (ImageButton)findViewById(R.id.iv_logo);
+        ivlogo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActiviy.this, SettingsActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+
+
         SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
         Boolean status = Boolean.valueOf(prefs.getString("uid", "true"));
 //        Log.d(TAG, prefs.getString("uid", "ERROR"));
-        Intent intent = null;
+        Intent intent = null;       
         if (!status) {
             String type = prefs.getString("type", "");
 
