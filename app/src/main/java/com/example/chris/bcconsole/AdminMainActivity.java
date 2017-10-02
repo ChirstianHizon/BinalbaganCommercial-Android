@@ -119,6 +119,8 @@ public class AdminMainActivity extends AppCompatActivity
         lv_inventory = (ListView) findViewById(R.id.lv_main);
         setUserProfile();
 
+//        startService(new Intent(this, Service_Location_Tracker.class));
+
         header.setVisibility(View.VISIBLE);
         search.setVisibility(View.GONE);
         search.clearFocus();

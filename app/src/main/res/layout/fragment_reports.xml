@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    tools:context=".Admin.Reports.Report_Sales">
+    tools:context=".Admin.Reports.Report_Sale">
 
     <Button
         android:id="@+id/btn_delivery"

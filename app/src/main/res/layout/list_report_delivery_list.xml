@@ -62,25 +62,14 @@
             android:textSize="18dp" />
 
         <TextView
-            android:id="@+id/type"
+            android:id="@+id/date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/title"
             android:ellipsize="end"
-            android:text="Type"
-            android:textSize="14dp" />
-
-        <TextView
-            android:id="@+id/supplier"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/title"
-            android:ellipsize="end"
-            android:text="Supplier"
+            android:text="Date"
             android:textSize="14dp" />
 
         <TextView
@@ -92,17 +81,6 @@
             android:layout_below="@+id/title"
             android:ellipsize="end"
             android:text="Quantity"
-            android:textSize="14dp" />
-
-        <TextView
-            android:id="@+id/date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/title"
-            android:ellipsize="end"
-            android:text="Date"
             android:textSize="14dp" />
 
         <TextView

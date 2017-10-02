@@ -15,32 +15,31 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.chris.bcconsole.AdminMainActivity;
 import com.example.chris.bcconsole.Objects.Reports;
 import com.example.chris.bcconsole.R;
-import com.example.chris.bcconsole.adapters.ReportInventoryAdapter;
+import com.example.chris.bcconsole.adapters.ReportSalesAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.example.chris.bcconsole.AdminMainActivity.url;
 
-public class Report_Inventory extends AppCompatActivity {
-
+public class Report_Sale extends AppCompatActivity {
     private Activity context = this;
+    private ArrayList<Reports> reports_list;
     private ListView lv_main;
-    private ReportInventoryAdapter adapter;
-    private List<Reports> reports_list;
+    private ReportSalesAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_report_inventory);
+        setContentView(R.layout.activity_report_sale);
 
 
         final Intent intent = getIntent();
@@ -48,13 +47,13 @@ public class Report_Inventory extends AppCompatActivity {
         final String start = intent.getStringExtra("Date_Start");
         final String end = intent.getStringExtra("Date_End");
 
-//        Toast.makeText(context, type +" | "+ start +" | " + end, Toast.LENGTH_SHORT).show();
-        checkReport(start,end);
+        Toast.makeText(context, "SALESip" +" | "+ start +" | " + end, Toast.LENGTH_SHORT).show();
 
+        GetReport(start,end);
 
         reports_list = new ArrayList<Reports>();
         lv_main = (ListView)findViewById(R.id.lv_main);
-        adapter = new ReportInventoryAdapter(context, R.layout.list_report_inventory_list, reports_list);
+        adapter = new ReportSalesAdapter(context, R.layout.list_report_inventory_list, reports_list);
         lv_main.setAdapter(adapter);
 
 
@@ -62,41 +61,45 @@ public class Report_Inventory extends AppCompatActivity {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-            checkReport(start,end);
-            mSwipeRefreshLayout.setRefreshing(false);
+                GetReport(start,end);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 
-
     }
 
-
-    private void checkReport(final String start, final String end) {
-//        Toast.makeText(context, AdminMainActivity.url, Toast.LENGTH_SHORT).show();
+    private void GetReport(final String start, final String end) {
+        Toast.makeText(context, AdminMainActivity.url, Toast.LENGTH_SHORT).show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d("REPORT_INVENTORY: ",response);
+                        Log.d("SALES_REPORT",response);
                         try {
                             JSONObject reader = new JSONObject(response);
                             int counter = Integer.valueOf(reader.getString("COUNTER"));
 
                             for (int x = 1; x <= counter;x++){
-                                JSONObject rep = new JSONObject(reader.getString(String.valueOf(x)));
+                                JSONObject order = new JSONObject(reader.getString(String.valueOf(x)));
+
+//                                "SID" =>$sales_id,
+//                                        "DATESTAMP" =>$sales_date,
+//                                        "USER" =>$customer_id,
+//                                        "TYPE" =>$sales_type,
+//                                        "QTY" =>$sales_qty,
+//                                        "TOTAL"=>number_format($sales_total,2)
 
                                 reports_list.add(
                                         new Reports(
-                                                rep.getString("ID"),
-                                                rep.getString("PRDNAME"),
-                                                rep.getString("DATESTAMP"),
-                                                rep.getString("TYPE"),
-                                                rep.getString("EMPLOYEE"),
-                                                rep.getString("LOGQTY"),
-                                                rep.getString("TOTAL"),
-                                                rep.getString("SUPPLIER")
+                                                order.getString("SID"),
+                                                order.getString("DATESTAMP"),
+                                                order.getString("USER"),
+                                                order.getString("TYPE"),
+                                                order.getString("QTY"),
+                                                order.getString("TOTAL")
                                         )
                                 );
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -112,7 +115,7 @@ public class Report_Inventory extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("access", "Binalbagan_Commercial_MOBILE_Access");
-                params.put("type", "13");
+                params.put("type", "14");
                 params.put("fromdate", start);
                 params.put("todate", end);
                 return params;
@@ -122,16 +125,3 @@ public class Report_Inventory extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 }
-
-
-//                        try {
-//                                JSONObject reader = new JSONObject(response);
-//                                int counter = Integer.valueOf(reader.getString("COUNTER"));
-//
-//                                for (int x = 1; x <= counter;x++){
-//                                JSONObject order = new JSONObject(reader.getString(String.valueOf(x)));
-//
-//                                }
-//                                } catch (JSONException e) {
-//                                e.printStackTrace();
-//                                }

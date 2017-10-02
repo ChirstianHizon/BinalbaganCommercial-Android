@@ -70,7 +70,8 @@ public class LocatorService extends Service {
             EXTRA_LATITUDE = "extra_latitude",
             EXTRA_LONGITUDE = "extra_longitude",
             EXTRA_COUNTER = "extra_counter",
-            EXTRA_STOP = "extra_stop";
+            EXTRA_STOP = "extra_stop",
+            EXTRA_STATUS = "extra_status";
 
     public LocatorService() {
     }
@@ -97,7 +98,6 @@ public class LocatorService extends Service {
             stopService();
         }
 
-        //DBFunctions();
         locationtimer();
         Notification();
         return super.onStartCommand(intent, flags, startId);
@@ -196,14 +196,14 @@ public class LocatorService extends Service {
             mLocationManager.requestLocationUpdates(
                     LocationManager.NETWORK_PROVIDER,
                     0,
-                    6000,
+                    3000,
                     mLocationListener);
 
         } else {
             mLocationManager.requestLocationUpdates(
                     LocationManager.GPS_PROVIDER,
                     0,
-                    6000,
+                    3000,
                     mLocationListener);
         }
     }
@@ -306,6 +306,7 @@ public class LocatorService extends Service {
                         try {
                             JSONObject reader = new JSONObject(response);
                             if(reader.getBoolean("RESULT")){
+
                                 myDb.deleteAllRouteData();
                                 DeliveryOnProgress.setDeliveryStatus(true);
                                 h.removeCallbacks(run);
@@ -313,6 +314,7 @@ public class LocatorService extends Service {
                                 Toast.makeText(LocatorService.this, "DELIVERY COMPLETE", Toast.LENGTH_SHORT).show();
                                 sendStopBrodMessage(true);
                                 stopSelf();
+
                             }else{
                                 Toast.makeText(LocatorService.this, "SERVER ERROR", Toast.LENGTH_SHORT).show();
                             }

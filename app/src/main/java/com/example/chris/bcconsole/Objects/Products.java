@@ -25,6 +25,14 @@ public class Products {
         this.qty = _qty;
     }
 
+    public Products(String _id, String _name, String _price, String _qty ,String _status) {
+        this.id = _id;
+        this.name = _name;
+        this.price = _price;
+        this.qty = _qty;
+        this.status = _status;
+    }
+
     public Products(String _id, String _name, String _desc, String _datestamp, String _timestamp,
                     String _price, int _level, int _optimal, int _warning,
                     String _image, String _category, String _status) {

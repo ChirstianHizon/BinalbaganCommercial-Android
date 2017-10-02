@@ -33,7 +33,7 @@ public class DatePicker_End extends AppCompatActivity {
         final String type = intent.getStringExtra("Report_Type");
         final String start = intent.getStringExtra("Date_Start");
 
-        Toast.makeText(this, type+" | "+start, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, type+" | "+start, Toast.LENGTH_SHORT).show();
 
         CalendarView cvend = (CalendarView)findViewById(R.id.cv_end);
 
@@ -51,17 +51,16 @@ public class DatePicker_End extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(context, date, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, type, Toast.LENGTH_SHORT).show();
 
 
                 switch (type){
-                    case "inventory":
-                        intent = new Intent(context, Report_Inventory.class);
+                    case "sales":
+                        intent = new Intent(context, Report_Sale.class);
                         break;
 
-                    case "sales":
-
-                        intent = new Intent(context, Report_Sales.class);
+                    case "inventory":
+                        intent = new Intent(context, Report_Inventory.class);
                         break;
 
                     case "delivery":

@@ -2,7 +2,6 @@ package com.example.chris.bcconsole.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +11,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.chris.bcconsole.Admin.InventoryView;
-import com.example.chris.bcconsole.Objects.Products;
+import com.example.chris.bcconsole.Objects.Orders;
 import com.example.chris.bcconsole.R;
 
 import java.util.List;
@@ -22,12 +20,12 @@ import java.util.List;
  * Created by chris on 05/09/2017.
  */
 
-public class InventoryListAdapter extends ArrayAdapter<Products> {
+public class DashboardPendOrderAdapter extends ArrayAdapter<Orders> {
 
     Context context;
 
-    public InventoryListAdapter(Context context, int resourceId,
-                                List<Products> items) {
+    public DashboardPendOrderAdapter(Context context, int resourceId,
+                                List<Orders> items) {
         super(context, resourceId, items);
         this.context = context;
     }
@@ -35,7 +33,7 @@ public class InventoryListAdapter extends ArrayAdapter<Products> {
     @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder = null;
-        final Products products = getItem(position);
+        final Orders orders = getItem(position);
 
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
@@ -54,35 +52,12 @@ public class InventoryListAdapter extends ArrayAdapter<Products> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.relRow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent = new Intent(getContext(), InventoryView.class);
-                assert products != null;
-                intent.putExtra("ID", String.valueOf(products.getId()));
-                context.startActivity(intent);
-            }
-        });
-
-        switch (products.getStatus()){
-            case "Optimal Level":
-//                holder.txtStatus.setTextColor(Color.parseColor(""));
-                break;
-            case "Normal Level":
-
-                break;
-
-            case "Warning Level":
-
-                break;
-        }
-
-        assert products != null;
-        holder.txtId.setText(String.valueOf(products.getId()));
-        holder.txtTitle.setText(products.getName());
-        holder.txtDesc.setText(products.getCategory());
-        holder.txtStatus.setText(products.getStatus());
+//      Orders(String id,String orderid,String datestamp,String customer,String status,String qty)
+        assert orders != null;
+        holder.txtId.setText(String.valueOf(orders.getId()));
+        holder.txtTitle.setText(orders.getCustomer());
+        holder.txtDesc.setText(orders.getTotal());
+        holder.txtStatus.setText(orders.getDatestamp());
         return convertView;
     }
 

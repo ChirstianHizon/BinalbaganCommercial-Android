@@ -2,7 +2,6 @@ package com.example.chris.bcconsole.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +18,12 @@ import java.util.List;
  * Created by chris on 05/09/2017.
  */
 
-public class ReportInventoryAdapter extends ArrayAdapter<Reports> {
+public class ReportDeliveryAdapter extends ArrayAdapter<Reports> {
 
     Context context;
 
-    public ReportInventoryAdapter(Context context, int resourceId,
-                                  List<Reports> items) {
+    public ReportDeliveryAdapter(Context context, int resourceId,
+                                 List<Reports> items) {
         super(context, resourceId, items);
         this.context = context;
     }
@@ -36,15 +35,14 @@ public class ReportInventoryAdapter extends ArrayAdapter<Reports> {
         LayoutInflater mInflater = (LayoutInflater) context
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_report_inventory_list, null);
+            convertView = mInflater.inflate(R.layout.list_report_sales_list, null);
             holder = new ViewHolder();
 
             holder.relRow = (RelativeLayout) convertView.findViewById(R.id.row);
             holder.txtId = (TextView) convertView.findViewById(R.id.id);
-            holder.txtType = (TextView) convertView.findViewById(R.id.type);
-            holder.txtQty = (TextView) convertView.findViewById(R.id.quantity);
             holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
             holder.txtDate = (TextView) convertView.findViewById(R.id.date);
+            holder.txtQty = (TextView) convertView.findViewById(R.id.quantity);
             holder.txtEmployee = (TextView) convertView.findViewById(R.id.employee);
             holder.txtSubtotal = (TextView) convertView.findViewById(R.id.subtotal);
 
@@ -68,24 +66,24 @@ public class ReportInventoryAdapter extends ArrayAdapter<Reports> {
 //            holder.txtTitle.setTextColor(Color.GREEN);
 //        }
 
-        switch (reports.getType()){
-            case "IN":
+//        switch (reports.getType()){
+//            case "IN":
+//
+//                break;
+//            case "OUT":
+//                holder.txtTitle.setTextColor(Color.RED);
+//                break;
+//
+//        }
 
-                break;
-            case "OUT":
-                holder.txtTitle.setTextColor(Color.RED);
-                break;
-
-        }
+        Double total = Double.valueOf( reports.getPrice()) * Double.valueOf(reports.getQty() );
 
         holder.txtId.setText(String.valueOf(reports.getId()));
-        holder.txtTitle.setText(reports.getPrdname());
-        holder.txtEmployee.setText(reports.getEmployee());
-        holder.txtType.setText(reports.getType());
-        holder.txtQty.setText(reports.getLogqty()+" pc/s");
+        holder.txtTitle.setText(reports.getUser());
         holder.txtDate.setText(reports.getDatestamp());
-        holder.txtSubtotal.setText(reports.getTotal());
-//        Log.d("-TOTAL",reports.getTotal());
+        holder.txtQty.setText(reports.getQty());
+        holder.txtEmployee.setText(reports.getUser());
+        holder.txtSubtotal.setText("P " +String.valueOf(total));
 
 
         return convertView;

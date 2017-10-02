@@ -62,6 +62,7 @@ public class DeliveryOnProgress extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 endLocator();
+                btnend.setText("Uploading Data");
                 if(isDeliveryFinised){
 
                     preferences = getSharedPreferences("DELIVERY",MODE_PRIVATE);
@@ -90,9 +91,17 @@ public class DeliveryOnProgress extends AppCompatActivity {
                         double latitude = intent.getDoubleExtra(LocatorService.EXTRA_LATITUDE, 0);
                         double longitude = intent.getDoubleExtra(LocatorService.EXTRA_LONGITUDE, 0);
                         int routecount = intent.getIntExtra(LocatorService.EXTRA_COUNTER, 0);
+                        String status = intent.getStringExtra(LocatorService.EXTRA_STATUS);
+
+                        if(status != null || !status.equals("")){
+                            btnend.setText("CLOSE DELIVERY");
+                        }else{
+                            btnend.setText("END DELIVERY");
+                        }
                         tvlat.setText(String.valueOf( latitude ));
                         tvlng.setText(String.valueOf( longitude ));
                         tvcounter.setText(String.valueOf( routecount ));
+
                     }
                 }, new IntentFilter(LocatorService.ACTION_LOCATION_BROADCAST)
         );

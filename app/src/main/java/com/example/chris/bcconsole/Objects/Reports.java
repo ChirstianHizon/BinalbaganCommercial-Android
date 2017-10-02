@@ -6,7 +6,7 @@ package com.example.chris.bcconsole.Objects;
 
 public class Reports {
 
-    private String id,prdname,datestamp,type,employee,logqty,total,supplier,qty;
+    private String id,prdname,datestamp,type,employee,logqty,total,supplier,qty,user,orderid,status,price;
 
     public Reports (String id,String prdname,String datestamp,String type,String employee,
                     String logqty,String total,String supplier){
@@ -19,6 +19,26 @@ public class Reports {
         this.total = total;
         this.supplier = supplier;
 
+    }
+
+    public Reports(String id,String datestamp,String user,String type,String qty,String total){
+        this.id = id;
+        this.datestamp = datestamp;
+        this.user = user;
+        this.type = type;
+        this.qty = qty;
+        this.total = total;
+    }
+
+    public Reports(String id,String orderid,String datestamp,String user,String status,String qty,String price){
+
+        this.id = id;
+        this.datestamp = datestamp;
+        this.user = user;
+        this.qty = qty;
+        this.orderid = orderid;
+        this.status = status;
+        this.price = price;
     }
     public String getPrdname() {
         return prdname;
@@ -90,5 +110,37 @@ public class Reports {
 
     public void setQty(String qty) {
         this.qty = qty;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getOrderid() {
+        return orderid;
+    }
+
+    public void setOrderid(String orderid) {
+        this.orderid = orderid;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }

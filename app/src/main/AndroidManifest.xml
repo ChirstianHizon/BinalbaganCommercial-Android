@@ -57,10 +57,15 @@
             android:name=".Admin.DeliveryView"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Admin.Reports.Report_Delivery" />
-        <activity android:name=".Admin.Reports.Report_Sales" />
         <activity android:name=".Admin.Reports.Report_Inventory" />
         <activity android:name=".Admin.Reports.DatePicker_Start" />
-        <activity android:name=".Admin.Reports.DatePicker_End"></activity>
+        <activity android:name=".Admin.Reports.DatePicker_End" />
+        <activity android:name=".Admin.Reports.Report_Sale" />
+
+        <service
+            android:name=".Service.Service_Location_Tracker"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
