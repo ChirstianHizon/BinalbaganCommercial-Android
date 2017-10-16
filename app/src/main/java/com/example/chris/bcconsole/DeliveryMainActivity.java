@@ -3,6 +3,7 @@ package com.example.chris.bcconsole;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.Delivery.DeliveryOnProgress;
+import com.example.chris.bcconsole.SQLite.DBController;
 import com.example.chris.bcconsole.adapters.DeliveryListAdapter_Delivery;
 import com.example.chris.bcconsole.Objects.Delivery;
 
@@ -40,6 +42,7 @@ public class DeliveryMainActivity extends AppCompatActivity {
     private DeliveryListAdapter_Delivery adapter;
     private List<Delivery> delivery_list;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private DBController myDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +66,22 @@ public class DeliveryMainActivity extends AppCompatActivity {
 
         SharedPreferences devprefs = getSharedPreferences("DELIVERY", MODE_PRIVATE);
         String order_id = devprefs.getString("id", "false");
+
+
+        myDb = new DBController(this);
+
+        Cursor route = myDb.getAllRoute();
+        while(route.moveToNext()) {
+
+            String lat = route.getString(1);
+            String lng = route.getString(2);
+            String datetime = route.getString(3);
+
+            Log.d("LOCATION_DB",lat + ","+lng + ","+datetime);
+
+        }
+
+
 
         Log.d("DELIVERY-PREFS",order_id);
         if(!order_id.equals("false")){
@@ -185,6 +204,7 @@ public class DeliveryMainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = getSharedPreferences("DELIVERY", MODE_PRIVATE).edit();
         editor.putString("id", id);
         editor.apply();
+
         Toast.makeText(context, "Resuming Delivery", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(context, DeliveryOnProgress.class);
         intent.putExtra("ID", id);

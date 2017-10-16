@@ -42,6 +42,7 @@ public class Report_Inventory extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_inventory);
 
+        setTitle("Inventory Report");
 
         final Intent intent = getIntent();
         final String type = intent.getStringExtra("Report_Type");

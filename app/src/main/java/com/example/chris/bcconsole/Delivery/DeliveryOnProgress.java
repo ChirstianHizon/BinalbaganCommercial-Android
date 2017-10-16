@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,12 +19,27 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.chris.bcconsole.DeliveryMainActivity;
 import com.example.chris.bcconsole.LoginActiviy;
 import com.example.chris.bcconsole.R;
 import com.example.chris.bcconsole.SQLite.DBController;
-import com.example.chris.bcconsole.Service.LocatorService;
+import com.example.chris.bcconsole.Service.Service_Location_Tracker;
 import com.example.chris.bcconsole.SettingsActivity;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.example.chris.bcconsole.AdminMainActivity.url;
 
 public class DeliveryOnProgress extends AppCompatActivity {
 
@@ -35,6 +52,12 @@ public class DeliveryOnProgress extends AppCompatActivity {
     private TextView tvlng;
     private TextView tvcounter;
     private TextView tvorderno;
+    private JSONArray coord = new JSONArray();
+    private String orderid,customer,address,contact;
+    private TextView tvcustname;
+    private TextView tvaddress;
+    private TextView tvcontact;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,66 +67,100 @@ public class DeliveryOnProgress extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myDb = new DBController(this);
-        
-        Intent intent = getIntent();
-        String order_id = intent.getStringExtra("ID");
-        runLocator(order_id);
-
         btnend = (Button)findViewById(R.id.btn_end_delivery);
         tvlat = (TextView)findViewById(R.id.tv_lat);
         tvlng = (TextView)findViewById(R.id.tv_lng);
         tvcounter = (TextView)findViewById(R.id.tv_counter);
         tvorderno = (TextView)findViewById(R.id.tv_orderno);
+        tvcustname = (TextView)findViewById(R.id.tv_custname);
+        tvaddress = (TextView)findViewById(R.id.tv_address);
+        tvcontact = (TextView)findViewById(R.id.tv_contact);
 
-        tvorderno.setText(order_id);
+
+        SharedPreferences prefs = getSharedPreferences("DELIVERY", MODE_PRIVATE);
+        orderid = prefs.getString("id", null);
+        customer = prefs.getString("customer", null);
+        address = prefs.getString("address", null);
+        contact = prefs.getString("contact", null);
+
+//        Intent intent = getIntent();
+//        String order_id = intent.getStringExtra("ID");
+        runLocator(orderid);
+
+        tvorderno.setText(orderid);
+        tvcustname.setText(customer);
+        tvaddress.setText(address);
+        tvcontact.setText(contact);
+
+        myDb = new DBController(this);
+
+        int counter = 0;
+        final Cursor route = myDb.getAllRoute();
+        while(route.moveToNext()) {
+            counter++;
+            String lat = route.getString(1);
+            String lng = route.getString(2);
+            String datetime = route.getString(3);
+            String accuracy = route.getString(4);
+
+            Log.d("LOCATION_DB",lat + ","+lng + ","+datetime +", "+accuracy);
+
+        }
+//        tvorderno.setText(String.valueOf(counter));
+
+
+
+
 
         btnend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                endLocator();
-                btnend.setText("Uploading Data");
-                if(isDeliveryFinised){
+                int routecount = myDb.countRoute();
+                if(routecount > 0 ){
+
+                    btnend.setText("Uploading Data");
+                    btnend.setEnabled(false);
+
+                    SharedPreferences prefs = getSharedPreferences("DELIVERY", MODE_PRIVATE);
+                    orderid = prefs.getString("id", null);
+
 
                     preferences = getSharedPreferences("DELIVERY",MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.clear();
                     editor.apply();
 
-                    Intent intx = new Intent(context, LocatorService.class);
-                    stopService(intx);
+//                    myDb.deleteAllRouteData();
 
-                    Intent intent = new Intent(context, DeliveryMainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    finish();
+                    Intent intx = new Intent(context, Service_Location_Tracker.class);
+                    startService(intx);
+
+
+
                 }else {
-                    Toast.makeText(context, "Attempting to Connect to Server...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "No Route Found", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-
+        String ACTION_LOCATION_BROADCAST = Service_Location_Tracker.class.getName() + "LocationBroadcast";
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
-                        double latitude = intent.getDoubleExtra(LocatorService.EXTRA_LATITUDE, 0);
-                        double longitude = intent.getDoubleExtra(LocatorService.EXTRA_LONGITUDE, 0);
-                        int routecount = intent.getIntExtra(LocatorService.EXTRA_COUNTER, 0);
-                        String status = intent.getStringExtra(LocatorService.EXTRA_STATUS);
-
-                        if(status != null || !status.equals("")){
-                            btnend.setText("CLOSE DELIVERY");
-                        }else{
-                            btnend.setText("END DELIVERY");
+                        String routecount = intent.getStringExtra("counter");
+                        Boolean status = intent.getBooleanExtra("status",true);
+                        if(routecount != null){
+                            tvcounter.setText(routecount);
                         }
-                        tvlat.setText(String.valueOf( latitude ));
-                        tvlng.setText(String.valueOf( longitude ));
-                        tvcounter.setText(String.valueOf( routecount ));
+                        if(!status){
 
+                            Toast.makeText(context, "UPLOADING TO SERVER", Toast.LENGTH_LONG).show();
+                            updateWeb();
+
+                        }
                     }
-                }, new IntentFilter(LocatorService.ACTION_LOCATION_BROADCAST)
+                }, new IntentFilter(ACTION_LOCATION_BROADCAST)
         );
     }
 
@@ -140,22 +197,89 @@ public class DeliveryOnProgress extends AppCompatActivity {
     }
 
     private void runLocator(String id){
-        Intent intent = new Intent(context, LocatorService.class);
-        intent.putExtra("ID", id);
-        intent.putExtra("STATUS", false);
+        Intent intent = new Intent(context, Service_Location_Tracker.class);
         startService(intent);
 
     }
 
-    private void endLocator(){
-        Intent intent = new Intent(context, LocatorService.class);
-        intent.putExtra("STATUS", true);
-        startService(intent);
+    private void updateWeb(){
+        Cursor route = myDb.getAllRoute();
+
+        while(route.moveToNext()) {
+            String id = route.getString(0);
+            String lat = route.getString(1);
+            String lng = route.getString(2);
+            String acc = route.getString(3);
+            String datetime = route.getString(4);
+            String delivid = route.getString(5);
+            JSONObject xcord = new JSONObject();
+            try {
+
+                xcord.put("id", id);
+                xcord.put("lat", lat);
+                xcord.put("lng", lng);
+                xcord.put("datetime", datetime);
+                xcord.put("delivid", delivid);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("DB-ROUTE", id + ","+lat + ","+lng + ","+datetime+ ","+delivid+ ","+acc);
+            coord.put(xcord);
+        }
+
+        Log.d("COORD", String.valueOf(coord));
+        submit(coord);
     }
 
-    public static void setDeliveryStatus(boolean stat){
+    private void submit(final JSONArray coordobj) {
+        Log.d("COORD-ORDERID", orderid);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("COORD-RESULT",response);
 
-        isDeliveryFinised = stat;
+                        try {
+                            JSONObject reader = new JSONObject(response);
+                            if(reader.getBoolean("RESULT")){
+
+                                myDb.deleteAllRouteData();
+
+                                Intent intent = new Intent(context, DeliveryMainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+
+                                Toast.makeText(context, "DELIVERY COMPLETE", Toast.LENGTH_SHORT).show();
+
+                            }else{
+                                Toast.makeText(context, "SERVER ERROR", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                Toast.makeText(context, "Unable to Connect to Server", Toast.LENGTH_SHORT).show();
+
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("access", "Binalbagan_Commercial_MOBILE_Access");
+                params.put("type", "9");
+                params.put("orderid", orderid);
+                params.put("coord", String.valueOf(coordobj));
+                Log.d("COORD-POST", String.valueOf(params));
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 }

@@ -41,6 +41,7 @@ public class Report_Sale extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_sale);
 
+        setTitle("Sales Report");
 
         final Intent intent = getIntent();
         final String type = intent.getStringExtra("Report_Type");

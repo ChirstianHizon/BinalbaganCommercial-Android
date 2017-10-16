@@ -37,6 +37,7 @@ public class DBController extends SQLiteOpenHelper {
     private static final String route_lng = "route_lng";
     private static final String route_datetimestamp = "route_timestamp";
     private static final String del_id = "del_id";
+    private static final String route_acc = "route_acc";
 
 
     public DBController(Context context) {
@@ -47,6 +48,7 @@ public class DBController extends SQLiteOpenHelper {
             + route_id + " INTEGER PRIMARY KEY AUTOINCREMENT,"
             + route_lat + " TEXT,"
             + route_lng + " TEXT,"
+            + route_acc + " TEXT,"
             + route_datetimestamp + " DATETIME DEFAULT (datetime('now','localtime')),"
             + del_id + " TEXT"
             + ")";
@@ -81,13 +83,14 @@ public class DBController extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertRoute(String lat,String lng,String id){
+    public boolean insertRoute(String lat,String lng,String id,String acc){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(route_lat,lat);
         contentValues.put(route_lng,lng);
         contentValues.put(del_id,id);
+        contentValues.put(route_acc,acc);
 
         long result = db.insert(TABLE_ROUTES,null ,contentValues);
         if(result == -1)

@@ -38,7 +38,7 @@ public class Delivery_View extends AppCompatActivity {
     private DBController myDb;
     private Button btndelivery;
     private Activity context = this;
-
+    private String name,address,contact;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +51,7 @@ public class Delivery_View extends AppCompatActivity {
 
         Intent intent = getIntent();
         order_id = intent.getStringExtra("ID");
-        initializeProductDetails(order_id);
+        deliveryDetails(order_id);
         // add back arrow to toolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,7 +70,14 @@ public class Delivery_View extends AppCompatActivity {
         btndelivery.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "Reports Started", Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor = getSharedPreferences("DELIVERY", MODE_PRIVATE).edit();
+                editor.putString("name", name);
+                editor.putString("address", address);
+                editor.putString("contact", contact);
+                editor.apply();
+
+
+                Toast.makeText(context, "Delivery Started", Toast.LENGTH_SHORT).show();
                 resumeDelivery(order_id);
             }
         });
@@ -87,7 +94,7 @@ public class Delivery_View extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void initializeProductDetails(final String id) {
+    private void deliveryDetails(final String id) {
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -101,6 +108,10 @@ public class Delivery_View extends AppCompatActivity {
                             tvorderdate.setText(json.getString("DATE"));
                             tvtitems.setText(json.getString("TITEMS"));
                             tvtamount.setText("P "+json.getString("TAMOUNT"));
+
+                            name = json.getString("LNAME") + ", " + json.getString("FNAME");
+                            address = json.getString("ADDRESS");
+                            contact= json.getString("CONTACT");
 
 
                             switch (json.getString("STATUS")){
@@ -118,6 +129,7 @@ public class Delivery_View extends AppCompatActivity {
                                 case "200":
                                     tvstatus.setText("DELIVERY ON PROGRESS");
                                     break;
+
                             }
 
                         } catch (JSONException e) {
@@ -161,6 +173,7 @@ public class Delivery_View extends AppCompatActivity {
 
                             SharedPreferences.Editor editor = getSharedPreferences("DELIVERY", MODE_PRIVATE).edit();
                             editor.putString("id", reader.getString("ID"));
+                            editor.putString("id", orderid);
                             editor.apply();
 
                             Toast.makeText(context, "Resuming Reports", Toast.LENGTH_SHORT).show();

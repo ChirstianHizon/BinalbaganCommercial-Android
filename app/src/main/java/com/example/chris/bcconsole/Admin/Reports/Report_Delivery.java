@@ -42,6 +42,8 @@ public class Report_Delivery extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_delivery);
 
+        setTitle("Item List");
+
         final Intent intent = getIntent();
         final String type = intent.getStringExtra("Report_Type");
         final String start = intent.getStringExtra("Date_Start");

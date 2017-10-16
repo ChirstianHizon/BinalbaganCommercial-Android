@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -41,6 +42,7 @@ public class fragment_delivery_details extends android.support.v4.app.Fragment {
     private DeliveryView activity;
     private String order_id;
     private TextView custcontact;
+    private ImageView ivimage;
 
     public fragment_delivery_details() {
 
@@ -57,6 +59,7 @@ public class fragment_delivery_details extends android.support.v4.app.Fragment {
         custaddress = (TextView)view.findViewById(R.id.custaddress);
         custnotes = (TextView)view.findViewById(R.id.custnotes);
         custcontact = (TextView)view.findViewById(R.id.custcontact);
+//        ivimage = (ImageView)view.findViewById(R.id.iv_image);
 
         activity = (DeliveryView) getActivity();
         order_id = activity.getOrder_id();
@@ -84,6 +87,15 @@ public class fragment_delivery_details extends android.support.v4.app.Fragment {
                             custaddress.setText(details.getString("CUST_ADDRESS"));
                             custnotes.setText(details.getString("CUST_NOTES"));
                             custcontact.setText(details.getString("CUST_CONTACT"));
+
+//                            Toast.makeText(activity, details.getString("IMAGE"), Toast.LENGTH_SHORT).show();
+
+//                            Picasso.with(getContext())
+//                                    .load(details.getString("IMAGE"))
+//                                    .placeholder(R.drawable.logo)
+//                                    .error(R.drawable.logo)
+//                                    .centerCrop()
+//                                    .into(ivimage);
 
                         } catch (JSONException e) {
                             e.printStackTrace();

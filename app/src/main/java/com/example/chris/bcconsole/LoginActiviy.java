@@ -172,4 +172,81 @@ public class LoginActiviy extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+
+    private void uploadtodb() {
+        Toast.makeText(context, url, Toast.LENGTH_SHORT).show();
+        final SharedPreferences.Editor editor = getSharedPreferences("USER", MODE_PRIVATE).edit();
+        final ProgressDialog progDailog = ProgressDialog.show(this,
+                "Connecting to Server",
+                "Verifying Account....", true);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("LOGIN: ", response);
+                        try {
+                            JSONObject reader = new JSONObject(response);
+                            Boolean status = Boolean.valueOf(reader.getString("status"));
+                            if (status) {
+                                editor.putString("uid", reader.getString("uid"));
+                                editor.putString("uname", reader.getString("uname"));
+                                editor.putString("fname", reader.getString("fname"));
+                                editor.putString("lname", reader.getString("lname"));
+                                editor.putString("image", reader.getString("image"));
+                                editor.putString("type", reader.getString("type"));
+                                editor.apply();
+
+                                Intent intent = null;
+                                switch (reader.getString("type")) {
+
+                                    case "0":
+                                        intent = new Intent(LoginActiviy.this, AdminMainActivity.class);
+
+                                        break;
+                                    case "1":
+
+                                        break;
+                                    case "2":
+                                        intent = new Intent(LoginActiviy.this, DeliveryMainActivity.class);
+
+                                        break;
+
+                                }
+
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+
+                                Toast.makeText(LoginActiviy.this, "Logged In", Toast.LENGTH_SHORT).show();
+
+                            } else {
+                                tvstatus.setText("Invalid Username/Password");
+                                btnlogin.setEnabled(true);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        progDailog.dismiss();
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                tvstatus.setText("Server Error");
+                progDailog.dismiss();
+                btnlogin.setEnabled(true);
+                Toast.makeText(context, "Unable to Connect to Server", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("access", "Binalbagan_Commercial_MOBILE_Access");
+                params.put("uname", tvusername.getText().toString());
+                params.put("pass", tvpassword.getText().toString());
+                params.put("type", "1");
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
 }

@@ -84,22 +84,26 @@ public class LocatorService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-
-        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
-        myDb = new DBController(this);
-
-        status = intent.getBooleanExtra("STATUS",false);
-        order_id = intent.getStringExtra("ID");
-
-
-        if(order_id !=  null){
-            Log.d("SERVICE", order_id);
-        }else{
-            stopService();
-        }
-
-        locationtimer();
-        Notification();
+        stopSelf();
+//
+//        Toast.makeText(this, url, Toast.LENGTH_SHORT).show();
+//        myDb = new DBController(this);
+//
+//        SharedPreferences prefs = getSharedPreferences("USER", MODE_PRIVATE);
+//        String uid = prefs.getString("uid", "true");
+//
+//        status = intent.getBooleanExtra("STATUS",false);
+//        order_id = intent.getStringExtra("ID");
+//
+//
+//        if(order_id !=  null){
+//            Log.d("SERVICE", order_id);
+//        }else{
+//            stopService();
+//        }
+//
+////        locationtimer();
+//        Notification();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -136,8 +140,8 @@ public class LocatorService extends Service {
         Intent intent = new Intent(this, DeliveryOnProgress.class);
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .setTicker("Reports on Progress..").setContentTitle("BC Console")
-                .setContentText("Reports On Progress...")
+                .setTicker("Delivery on Progress..").setContentTitle("BC Console")
+                .setContentText("3 Items needs to be Restocked")
                 .setSmallIcon(R.drawable.logo)
                 .setOngoing(true)
                 .setContentIntent(pIntent);
@@ -226,7 +230,7 @@ public class LocatorService extends Service {
                 sendBroadcastMessage(location);
 
                 //INSERT LOCATION TO DB
-                insertLocation(latitude,longitude, order_id);
+//                insertLocation(latitude,longitude, order_id);
 
                 Log.d("SERVICE","LAT: "+ latitude);
                 Log.d("SERVICE","LNG: "+ longitude);
@@ -254,11 +258,11 @@ public class LocatorService extends Service {
         }
     };
 
-    private void insertLocation(String lat,String lng,String id){
-        if(id != null){
-            myDb.insertRoute(lat,lng, order_id);
-        }
-    }
+//    private void insertLocation(String lat,String lng,String id){
+//        if(id != null){
+//            myDb.insertRoute(lat,lng, orderid);
+//        }
+//    }
 
     private void stopService(){
 
@@ -308,7 +312,7 @@ public class LocatorService extends Service {
                             if(reader.getBoolean("RESULT")){
 
                                 myDb.deleteAllRouteData();
-                                DeliveryOnProgress.setDeliveryStatus(true);
+//                                DeliveryOnProgress.setDeliveryStatus(true);
                                 h.removeCallbacks(run);
                                 Log.d("SERVICE","LOCATOR STOPPED");
                                 Toast.makeText(LocatorService.this, "DELIVERY COMPLETE", Toast.LENGTH_SHORT).show();

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "553426415388",
+    "firebase_url": "https://binalbagancommercial-229c0.firebaseio.com",
+    "project_id": "binalbagancommercial-229c0",
+    "storage_bucket": "binalbagancommercial-229c0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553426415388:android:87bed1bccdc53e74",
+        "android_client_info": {
+          "package_name": "com.example.chris.bcconsole"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "553426415388-k7fsig9v7vn9st3gllpodcoqr93ovn6l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chris.bcconsole",
+            "certificate_hash": "8756d3e50f6fb74af682fc63e56bea0086421475"
+          }
+        },
+        {
+          "client_id": "553426415388-vti2ud5mqqnueui9ej3h0vcifgnp3pf0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2bi3F9wSnoptAc-YsdnbvvsElLhNrlcQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "553426415388-vti2ud5mqqnueui9ej3h0vcifgnp3pf0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
